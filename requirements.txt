@@ -1,0 +1,14 @@
+torch>=2.4
+torchvision>=0.19
+numpy>=1.26
+scipy>=1.11
+Pillow>=10.0
+matplotlib>=3.8
+PyYAML>=6.0
+tqdm>=4.66
+
+# Optional: only needed for `python data/download_datasets.py --source huggingface`
+huggingface_hub>=0.20
+
+# Dev / test
+pytest>=8.0

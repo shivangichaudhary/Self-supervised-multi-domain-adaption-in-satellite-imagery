@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Datasets (large, regenerable via data/synthetic_generator.py or data/download_datasets.py)
+data/PASTIS-HD/
+data/MSC-France/
+data/sample_dataset/
+data/france_dataset/
+
+# Trained checkpoints and generated visualizations (regenerable via main.py)
+outputs/*.pth
+outputs/visualizations/
+outputs/*.png
+
+# Build artifact (regenerated via embed_dashboard.py)
+visualizer_dashboard_embedded.html
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
