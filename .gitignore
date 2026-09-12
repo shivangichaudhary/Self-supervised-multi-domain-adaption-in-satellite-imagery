@@ -9,10 +9,12 @@ data/MSC-France/
 data/sample_dataset/
 data/france_dataset/
 
-# Trained checkpoints and generated visualizations (regenerable via main.py)
-outputs/*.pth
-outputs/visualizations/
-outputs/*.png
+# Trained checkpoints and generated visualizations (regenerable via main.py).
+# Wildcarded so alternate output dirs (e.g. outputs_pastis_fixed/ from a custom
+# --config output_dir override) are covered too, not just the literal "outputs/".
+outputs*/*.pth
+outputs*/visualizations/
+outputs*/*.png
 
 # Build artifact (regenerated via embed_dashboard.py)
 visualizer_dashboard_embedded.html
