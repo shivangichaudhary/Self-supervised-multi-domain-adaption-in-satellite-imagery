@@ -83,14 +83,30 @@ def _deep_merge(base: dict, override: dict) -> dict:
             base[key] = value
     return base
 
-def load_config(config_path=None):
-    config = copy.deepcopy(DEFAULT_CONFIG)
+def merge_user_config(config: dict, config_path=None) -> dict:
+    """
+    Merges a user YAML file's overrides into `config` in place (returns config for chaining).
+
+    Callers must apply this AFTER apply_dataset()/apply_mode() — those two unconditionally set
+    dataset-specific keys (epochs, batch_size, num_classes, domains, ...), so merging user
+    overrides before them would have those overrides silently clobbered right back to defaults.
+    """
     if config_path and os.path.exists(config_path):
         with open(config_path, "r") as f:
             user_config = yaml.safe_load(f)
             if user_config:
                 _deep_merge(config, user_config)
     return config
+
+def load_config(config_path=None):
+    """
+    Returns DEFAULT_CONFIG with a user YAML merged on top, with no dataset/mode applied.
+    main.py should NOT pass config_path here — see merge_user_config's docstring for why.
+    Use load_config(None) to get plain defaults, then apply_dataset()/apply_mode(), then
+    merge_user_config() last so user overrides always win.
+    """
+    config = copy.deepcopy(DEFAULT_CONFIG)
+    return merge_user_config(config, config_path)
 
 def apply_mode(config, mode: str):
     """

@@ -1,7 +1,7 @@
 import argparse
 import os
 import torch
-from configs.config import load_config, apply_mode, apply_dataset
+from configs.config import load_config, apply_mode, apply_dataset, merge_user_config
 from data.synthetic_generator import SyntheticSatelliteGenerator
 from data.convert_real_datasets import process_pastis_hd
 from train_domain_encoder import train_domain_encoder
@@ -21,10 +21,14 @@ def main():
                         help="Domain mode: 'sensor' (multi-sensor, default), 'angle' (multi-angle), or 'both' (combined)")
     args = parser.parse_args()
 
-    config = load_config(args.config)
+    # apply_dataset()/apply_mode() unconditionally set dataset-specific defaults (epochs,
+    # batch_size, num_classes, domains, ...), so the user's --config overrides must be merged
+    # in LAST or they get silently clobbered back to those defaults.
+    config = load_config(None)
     config = apply_dataset(config, args.dataset)
     if args.dataset == "synthetic":
         config = apply_mode(config, args.mode)
+    config = merge_user_config(config, args.config)
     print(f"[*] Dataset: {args.dataset.upper()} | Active Domains: {config['data']['domains']}")
     
     # Device setup
