@@ -132,7 +132,6 @@ evaluate_generalization.py  unseen-pair evaluation (Objective 3, not yet evaluat
 demo_app.py                 interactive demo
 embed_dashboard.py          builds the self-contained visualizer dashboard
 tests/                      pytest suite
-docs/                       review presentations and literature review
 ```
 
 ## Getting started
