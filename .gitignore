@@ -16,6 +16,14 @@ outputs*/*.pth
 outputs*/visualizations/
 outputs*/*.png
 
+# Exception: published Objective 1 and 2 results (encoder, generator, discriminator, figures)
+!outputs_pastis_fixed/
+!outputs_pastis_fixed/domain_encoder.pth
+!outputs_pastis_fixed/generator.pth
+!outputs_pastis_fixed/discriminator.pth
+!outputs_pastis_fixed/visualizations/
+outputs_pastis_fixed/visualizations/segmentation_eval_*.png
+
 # Build artifact (regenerated via embed_dashboard.py)
 visualizer_dashboard_embedded.html
 
