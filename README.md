@@ -8,6 +8,8 @@ Dissertation Phase I project, M.Tech, CHRIST (Deemed to be University), Bangalor
 
 ## Overview
 
+Full write-up: [Dissertation Phase I report (PDF)](docs/Final_Project_Report.pdf).
+
 Satellite AI models are usually trained on one sensor, season, or region and then deployed across many. Performance drops sharply under this *domain shift*, even when the land-cover classes are identical. Standard fixes need labeled target-domain data and a clear domain boundary. Both are expensive, and the boundary is often undefined in blended multi-sensor mosaics.
 
 This project extends **SS(DA)²** (Zhang, Shi & Zhu, 2023), which adapts between two satellites without labels, to **many sensors at once**. It has two parts:
@@ -132,6 +134,7 @@ evaluate_generalization.py  unseen-pair evaluation (Objective 3, not yet evaluat
 demo_app.py                 interactive demo
 embed_dashboard.py          builds the self-contained visualizer dashboard
 tests/                      pytest suite
+docs/                       Dissertation Phase I report (PDF)
 ```
 
 ## Getting started
