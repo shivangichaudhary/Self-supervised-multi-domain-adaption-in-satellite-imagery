@@ -1,0 +1,370 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,backgrounds}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{pifont}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Self-Supervised Continuous Domain Embeddings for Unified Multi-Sensor Satellite Image Translation}
+
+\author{
+\IEEEauthorblockN{Shivangi\IEEEauthorrefmark{1}, Benedict Tephila M.\IEEEauthorrefmark{2}, Naveen J.\IEEEauthorrefmark{3}}
+\IEEEauthorblockA{
+Department of Computer Science and Engineering \\
+CHRIST (Deemed to be University), Bangalore -- 560029, India \\
+\IEEEauthorrefmark{1}shivangi.a@mtech.christuniversity.in,
+\IEEEauthorrefmark{2}benedict.tephila@christuniversity.in,
+\IEEEauthorrefmark{3}naveen.j@christuniversity.in}
+}
+
+\maketitle
+
+\begin{abstract}
+Deep learning models for satellite image analysis are typically trained on imagery from a specific sensor, season, or geographic region, and their performance is known to degrade when the same land-cover classes are observed under a different acquisition domain. Existing domain-adaptation approaches for satellite imagery generally require labeled target-domain data, a discrete predefined set of domains, or both -- assumptions that are difficult to satisfy in practice, particularly for growing multi-sensor archives where domain boundaries are not always well defined. This paper reports the first two components of a broader self-supervised multi-domain adaptation framework for satellite imagery: (i) a continuous domain encoder that learns a label-free, continuous-valued style embedding directly from unlabeled multi-sensor image patches using a contrastive (InfoNCE) pretext task, and (ii) a unified conditional generator that translates the content of a source-domain patch into the style of an arbitrary target domain using a single Adaptive Instance Normalization (AdaIN)-modulated network, conditioned on the continuous embedding rather than a discrete domain label. Both networks are trained on a CPU with 1{,}200 patches per sensor from the real PASTIS-HD benchmark (Sentinel-2, SPOT~6/7, and Sentinel-1 SAR) and evaluated on 300 held-out patches per sensor from a largely different region. The encoder solves its pretext task but identifies the sensor only moderately (65.8\% against 33.3\% by chance). The generator preserves scene structure and responds smoothly to interpolated styles for the pairs that involve SAR, but does not reproduce the radiometry of the target sensor: a constant image agrees better with the real target patch than the translation does, and translations into Sentinel-2 collapse to a source-independent color cast. Generalization to unseen sensor pairs and downstream accuracy are outside the scope of this paper.
+\end{abstract}
+
+\begin{IEEEkeywords}
+domain adaptation, self-supervised learning, generative adversarial networks, contrastive learning, multi-sensor satellite imagery, image-to-image translation
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Satellite remote sensing has moved from single-mission analysis to a regime in which optical and radar constellations -- Sentinel-2, Landsat, SPOT, and a growing set of commercial very-high-resolution (VHR) and synthetic aperture radar (SAR) platforms -- jointly and continuously image the Earth's surface. Deep learning models for land-cover classification, crop mapping, and change detection are increasingly expected to operate across this heterogeneous, multi-sensor archive rather than on the single sensor they were trained on.
+
+This cross-sensor requirement is difficult to satisfy in practice. Each sensor imposes its own radiometric calibration, spectral response, spatial resolution, and noise characteristics -- effects that range from atmospheric haze and calibration drift in optical imagery to speckle noise and incidence-angle-dependent backscatter in SAR. As a result, a model trained on one sensor's statistics can suffer a sharp drop in accuracy when applied to another sensor, even when the underlying land-cover classes are identical. Because acquiring and annotating imagery from every sensor of interest is costly, models frequently must be adapted to a new domain with little or no labeled target-domain data.
+
+Existing approaches to this problem fall broadly into two families. Domain-adaptation methods built specifically for satellite imagery, such as multi-source standardization~\cite{tasar2020standardgan}, condition translation on a discrete, manually assigned domain identity and have been shown to struggle with domain-pair combinations not seen during training. Self-supervised alternatives such as SS(DA)$^2$~\cite{zhang2023ssdada} remove the requirement for labels and an explicit domain boundary, but are formulated for translation between exactly two satellites at a time, requiring separate training for every new sensor pair. In the broader image-to-image translation literature, StarGAN~\cite{choi2018stargan} and StarGAN~v2~\cite{choi2020starganv2} unify translation across many domains within a single generator, with StarGAN~v2 replacing discrete domain labels with a learned continuous style code -- but both are trained with supervised, discretely-indexed domain labels and are evaluated on natural-image benchmarks (faces, animal faces) using visual-realism metrics rather than on satellite imagery or downstream task correctness. More recent diffusion-based translators~\cite{vinholi2024multisensor,kieu2025universal} improve translation quality and, in the case of a diffusion router~\cite{kieu2025universal}, route between multiple domains, but still operate over a discrete, pre-enumerated set of domains and incur the substantially higher inference cost of iterative diffusion sampling.
+
+Taken together, the literature does not yet offer a method that combines three properties simultaneously for satellite imagery: label-free training, a continuous (rather than fixed-cardinality, discretely labeled) representation of domain, and a single generator capable of translating into an arbitrary target style. This gap motivates the present work.
+
+We address the first two of these properties by extending the self-supervised, label-free philosophy of SS(DA)$^2$ from a pairwise setting into a continuous, StarGAN~v2-style unified generator that does not require discrete domain conditioning. Concretely, a contrastive domain encoder is pretrained on unlabeled multi-sensor patches to produce a continuous embedding of each patch's sensor/style characteristics, and a single conditional generator, modulated via AdaIN using this embedding, translates a source patch into the style of any target patch's embedding -- including domain combinations not explicitly indexed during training. This paper reports the design, implementation, and held-out evaluation of these two components; the remaining objectives of the broader project -- generalization testing on unseen sensor-pair combinations and downstream task evaluation -- are implemented in the accompanying codebase but are outside the scope of this paper.
+
+The contributions of this paper are:
+\begin{itemize}
+\item A self-supervised contrastive domain encoder that produces continuous, label-free embeddings of sensor/style characteristics directly from unlabeled multi-sensor satellite patches.
+\item A single unified, AdaIN-modulated conditional generator conditioned on this continuous embedding, rather than a discrete domain code, so that translation into an arbitrary target style is possible without retraining per domain pair.
+\item A composite training objective -- combining adversarial, style-reconstruction, cycle-consistency, semantic-preservation, identity, and edge-preservation losses -- designed to keep geospatial content intact while the sensor-specific style is changed.
+\item An implementation and held-out evaluation on the real PASTIS-HD multi-sensor benchmark (Sentinel-2, SPOT~6/7, Sentinel-1~SAR) that reports both what the approach achieves (label-free continuous embeddings, structure-preserving and style-conditioned translation) and where it falls short (moderate sensor information in the embedding, target radiometry not reproduced).
+\end{itemize}
+
+\section{Related Work}
+
+\subsection{Domain Adaptation for Satellite Imagery}
+StandardGAN~\cite{tasar2020standardgan} addresses multi-source domain adaptation for semantic segmentation of VHR satellite images by standardizing each source domain's data distribution toward a common reference before downstream training. It operates over a discrete, enumerated set of source domains and, as reported by the authors, struggles to preserve image content faithfully while generalizing to sensor combinations not directly standardized against. SS(DA)$^2$~\cite{zhang2023ssdada}, the base paper on which the present framework builds, removes the need for labeled target data and an explicit domain boundary by training a contrastive, domain-agnostic GAN that translates between two satellite domains using only unlabeled imagery. Its central limitation, and the specific gap this paper addresses, is that the formulation is pairwise: each trained model supports exactly two satellites, so a new sensor added to the archive requires an additional model.
+
+\subsection{Multi-Domain Image-to-Image Translation}
+StarGAN~\cite{choi2018stargan} was the first to unify multi-domain translation within a single generator, conditioning the network on a discrete one-hot domain vector supplied at training and inference time. StarGAN~v2~\cite{choi2020starganv2} replaces this discrete label with a continuous style code produced by a mapping network or a style encoder, injected into the generator through AdaIN~\cite{huang2017adain}, and reports substantially more diverse and realistic synthesis. Both methods, however, are trained with supervised domain labels and are evaluated on natural-image datasets (human/animal faces) using visual-realism metrics (e.g., FID), rather than on satellite imagery or a task-grounded correctness metric. Diffusion-based translators have since been proposed for multi-sensor optical imagery~\cite{vinholi2024multisensor} and for universal multi-domain routing~\cite{kieu2025universal}; while these improve sample fidelity, the router in~\cite{kieu2025universal} still selects among a discrete, pre-specified set of domain experts, and diffusion sampling is computationally more expensive at inference than a single feed-forward GAN pass, which matters when translating large satellite mosaics.
+
+\section{Research Gap and Motivation}
+Table~\ref{tab:gap} summarizes the properties of the most closely related methods against those targeted by this work. No prior method reviewed here combines label-free training with a continuous (open-ended) domain representation inside a single generator that is designed for, and evaluated on, satellite imagery. SS(DA)$^2$ offers the first property but not the second (pairwise only); StarGAN~v2 offers the second but not the first (supervised discrete labels at training time) and is not designed for or evaluated on remote-sensing data; StandardGAN targets satellite imagery but requires discrete domain identity. Objectives~1 and~2 of the present project -- a label-free continuous domain encoder and a single unified generator conditioned on that continuous embedding -- are designed to close this specific combination of gaps; objectives~3 and~4 (generalization to unseen domain-pair combinations and downstream task evaluation) build on this foundation but are outside the scope of this paper.
+
+\begin{table}[t]
+\centering
+\caption{Qualitative comparison of properties relevant to the identified research gap.}
+\label{tab:gap}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} & \textbf{Label-free} & \textbf{Continuous domain repr.} & \textbf{Satellite-specific} \\
+\midrule
+StandardGAN~\cite{tasar2020standardgan}    & \ding{55} & \ding{55} & \ding{51} \\
+SS(DA)$^2$~\cite{zhang2023ssdada}          & \ding{51} & \ding{55} (pairwise) & \ding{51} \\
+StarGAN~\cite{choi2018stargan}             & \ding{55} & \ding{55} & \ding{55} \\
+StarGAN~v2~\cite{choi2020starganv2}        & \ding{55} & \ding{51} & \ding{55} \\
+\textbf{Proposed (Objectives 1--2)}        & \ding{51} & \ding{51} & \ding{51} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\section{Proposed Methodology}
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  node distance=8mm and 10mm,
+  box/.style={draw, rounded corners, align=center, minimum height=1.0cm, font=\small, fill=blue!5},
+  data/.style={draw, rounded corners, align=center, minimum height=0.9cm, font=\small, fill=gray!8},
+  vec/.style={draw, ellipse, align=center, minimum height=0.8cm, font=\small, fill=yellow!15},
+  lossbox/.style={draw, rounded corners, align=left, font=\scriptsize, fill=red!5},
+  arr/.style={-{Latex[length=2mm]}, thick}
+]
+  \node[data]                              (xsrc) at (0,6)    {Source patch $x_{src}$};
+  \node[data]                              (xtgt) at (0,2)    {Target exemplar $x_{tgt}$};
+
+  \node[box, minimum width=3.0cm]          (E1)   at (4.0,6)  {Domain Encoder $E$\\(contrastive, self-supervised)};
+  \node[box, minimum width=3.0cm]          (CE)   at (4.0,4)  {Content Encoder\\(shared with $G$)};
+  \node[box, minimum width=3.0cm]          (E2)   at (4.0,2)  {Domain Encoder $E$\\(shared weights)};
+
+  \node[vec]                               (zsrc) at (8.0,6)  {$z_{src}$};
+  \node[vec]                               (c)    at (8.0,4)  {content $c$};
+  \node[vec]                               (ztgt) at (8.0,2)  {$z_{tgt}$};
+
+  \node[box, minimum width=3.2cm, minimum height=1.6cm] (G) at (12.0,4) {Unified Generator $G$\\AdaIN ResBlocks + Decoder};
+
+  \node[data, minimum width=2.6cm]         (xfake) at (16.2,4) {$\hat{x} = G(x_{src}, z_{tgt})$};
+
+  \node[box, fill=orange!8, minimum width=3.0cm] (D) at (16.2,1.2) {Discriminator $D$\\(spectral norm + style projection)};
+
+  \draw[arr] (xsrc) -- (E1);
+  \draw[arr] (xsrc) -- (CE);
+  \draw[arr] (xtgt) -- (E2);
+  \draw[arr] (E1) -- (zsrc);
+  \draw[arr] (CE) -- (c);
+  \draw[arr] (E2) -- (ztgt);
+  \draw[arr] (c) -- (G);
+  \draw[arr] (ztgt.east) -| ([xshift=-3mm]G.south);
+  \draw[arr] (G) -- (xfake);
+  \draw[arr] (xfake) -- (D);
+  \draw[arr] (ztgt) -- (D.west);
+
+  \node[lossbox, below=8mm of D, minimum width=7.4cm] (losses) {
+    $\mathcal{L}_G = \lambda_{adv}\mathcal{L}_{adv} + \lambda_{sty}\mathcal{L}_{sty} + \lambda_{cyc}\mathcal{L}_{cyc} +$\\
+    $\lambda_{sem}\mathcal{L}_{sem} + \lambda_{id}\mathcal{L}_{id} + \lambda_{edge}\mathcal{L}_{edge}$ \quad (Sec.~\ref{sec:objective})
+  };
+  \draw[arr, dashed] (D.south) -- (losses.north);
+\end{tikzpicture}}
+\caption{Simplified architecture covering the two components reported in this paper: the self-supervised continuous domain encoder $E$ (Objective~1, Sec.~\ref{sec:encoder}) and the unified AdaIN-conditioned generator $G$ with its projection discriminator $D$ (Objective~2, Sec.~\ref{sec:generator}). The source embedding $z_{src}$ is re-used in two additional forward passes through $G$, omitted here for clarity, to compute the cycle-consistency and identity losses of Sec.~\ref{sec:objective}. Components belonging to later objectives of the project (leave-one-pair-out generalization testing and downstream task evaluation) are not shown, as they are outside the scope of this paper.}
+\label{fig:architecture}
+\end{figure*}
+
+Fig.~\ref{fig:architecture} shows the two components covered by this paper. A domain encoder $E$ maps an unlabeled image patch to a continuous style embedding; a content encoder (the downsampling path of the generator) extracts a domain-invariant spatial content code; and a unified generator $G$ recombines the content of a source patch with the embedding of a target patch to synthesize a translation, evaluated by a projection discriminator $D$.
+
+\subsection{Self-Supervised Continuous Domain Encoder}
+\label{sec:encoder}
+The encoder $E_\theta$ takes an $H \times W$ patch with $C$ channels (4 in this implementation: three optical/SAR-derived channels plus one auxiliary channel, see Sec.~\ref{sec:dataset}) and produces a continuous embedding $z \in \mathbb{R}^{64}$. The network applies an input-adapter convolution followed by three stride-2 convolutional blocks (each Conv--InstanceNorm--LeakyReLU) that progressively downsample the spatial resolution while increasing channel width, followed by a squeeze-and-excitation (SE) block~\cite{hu2018senet} that recalibrates channel-wise responses so the encoder can attend to the most discriminative bands (e.g., near-infrared for vegetation, VV/VH ratio for SAR).
+
+Rather than pooling to a class score, the encoder computes first- and second-order spatial statistics of the final feature map -- the channel-wise mean $\mu$ and standard deviation $\sigma$ -- which together summarize the radiometric and textural style of the patch independently of its spatial content:
+\begin{equation}
+\mu_c = \frac{1}{HW}\sum_{i,j} h_{c,i,j}, \qquad
+\sigma_c = \sqrt{\frac{1}{HW}\sum_{i,j}(h_{c,i,j}-\mu_c)^2 + \epsilon}
+\label{eq:stats}
+\end{equation}
+where $h$ is the feature map after the SE block. The concatenated statistics $[\mu;\sigma]$ (optionally fused with a projected acquisition-angle feature when angle metadata is available, unused in the sensor-only experiment reported here) are passed through a multilayer perceptron projection head and L2-normalized onto the unit hypersphere:
+\begin{equation}
+z = \frac{f_\phi([\mu;\sigma])}{\lVert f_\phi([\mu;\sigma]) \rVert_2}, \qquad z \in \mathbb{R}^{64}.
+\label{eq:embed}
+\end{equation}
+
+The encoder is pretrained with no domain labels using a contrastive pretext task in the style of InfoNCE~\cite{oord2018cpc}. Two independently augmented views ($z_1, z_2$) of the same patch (random flips and 90\textdegree{} rotations) are treated as a positive pair, and all other patches in the training batch act as negatives:
+\begin{equation}
+\mathcal{L}_{con} = -\frac{1}{2B}\sum_{i=1}^{B}\Big[
+\log\frac{e^{\,z_{1,i}\cdot z_{2,i}/\tau}}{\sum_{j} e^{\,z_{1,i}\cdot z_{2,j}/\tau}}
++
+\log\frac{e^{\,z_{2,i}\cdot z_{1,i}/\tau}}{\sum_{j} e^{\,z_{2,i}\cdot z_{1,j}/\tau}}
+\Big]
+\label{eq:infonce}
+\end{equation}
+where $B$ is the batch size and $\tau$ is a temperature hyperparameter. Because the positive/negative structure is derived purely from data augmentation rather than sensor labels, the resulting embedding space is learned without any supervision of domain identity, and any patch -- from a domain seen during training or not -- can be projected into the same continuous space at inference time.
+
+\subsection{Unified Conditional Generator}
+\label{sec:generator}
+The generator $G_\psi$ takes a source patch $x_{src}$ and a target embedding $z_{tgt}$ (produced by the frozen encoder $E$ on a target-domain exemplar) and synthesizes a translated patch $\hat{x} = G_\psi(x_{src}, z_{tgt})$. A single generator instance is shared across all domains: the target style is entirely determined by $z_{tgt}$, so translation into any domain the encoder can embed -- rather than only domains enumerated at training time -- requires no architectural change or additional parameters.
+
+The content path follows an encoder-bottleneck-decoder design in the spirit of StarGAN~v2~\cite{choi2020starganv2}, adapted to be label-free. A content encoder with reflection-padded convolutions and instance normalization downsamples $x_{src}$ to a domain-invariant content code $c = \mathrm{Enc}_c(x_{src})$. This code is passed through four residual blocks modulated by Adaptive Instance Normalization (AdaIN)~\cite{huang2017adain}, which injects the target style at every block:
+\begin{equation}
+\mathrm{AdaIN}(h, z) = \gamma(z)\cdot\frac{h - \mu(h)}{\sigma(h)} + \beta(z)
+\label{eq:adain}
+\end{equation}
+where $\mu(h), \sigma(h)$ are the per-channel instance statistics of the intermediate feature map $h$, and $\gamma(z) = W_\gamma z + b_\gamma$, $\beta(z) = W_\beta z + b_\beta$ are affine parameters regressed from the continuous embedding. The decoder mirrors the encoder with two AdaIN-modulated upsampling stages; bilinear (rather than nearest-neighbor or transposed-convolution) upsampling is used to avoid checkerboard artifacts, followed by a reflection-padded output convolution with a $\tanh$ activation.
+
+\subsection{Discriminator with Continuous Style Projection}
+The discriminator $D_\xi$ is a multi-scale PatchGAN with spectral normalization~\cite{miyato2018spectral} applied to every convolutional layer, which stabilizes adversarial training by bounding the Lipschitz constant of each layer. In addition to an unconditional real/fake head, $D_\xi$ projects its intermediate features onto the conditioning embedding $z$:
+\begin{equation}
+D_\xi(x, z) = D_{uncond}(x) + \frac{\langle \phi(x), W_{proj}\,z\rangle}{\sqrt{d}}
+\label{eq:disc}
+\end{equation}
+where $\phi(x)$ is the discriminator's penultimate feature map, $W_{proj}$ is a learned linear projection of the embedding, and $d$ is the feature dimension. This term penalizes translations whose visual style does not match the conditioning embedding $z$, complementing the encoder's own style-reconstruction signal (Sec.~\ref{sec:objective}).
+
+\subsection{Composite Training Objective}
+\label{sec:objective}
+The generator is trained with a weighted sum of six loss terms, each targeting a specific failure mode observed in unconstrained multi-domain translation:
+
+\emph{Adversarial loss} (least-squares GAN~\cite{mao2017lsgan}), encouraging $\hat{x}$ to be indistinguishable from real target-domain patches under the style-conditioned discriminator:
+\begin{align}
+\mathcal{L}_D &= \tfrac{1}{2}\mathbb{E}\big[(D_\xi(x_{tgt}, z_{tgt}) - 1)^2\big] + \tfrac{1}{2}\mathbb{E}\big[D_\xi(\hat{x}, z_{tgt})^2\big] \\
+\mathcal{L}_{adv} &= \mathbb{E}\big[(D_\xi(\hat{x}, z_{tgt}) - 1)^2\big]
+\label{eq:adv}
+\end{align}
+
+\emph{Style-reconstruction loss}, requiring the target style to be measurable in the output by re-encoding it:
+\begin{equation}
+\mathcal{L}_{sty} = \mathbb{E}\,\lVert E(\hat{x}) - z_{tgt} \rVert_1
+\label{eq:sty}
+\end{equation}
+
+\emph{Cycle-consistency loss}~\cite{zhu2017cyclegan}, translating $\hat{x}$ back toward the source style and requiring recovery of the original patch, which discourages mode collapse across domains:
+\begin{equation}
+\mathcal{L}_{cyc} = \mathbb{E}\,\lVert G(\hat{x}, z_{src}) - x_{src} \rVert_1
+\label{eq:cyc}
+\end{equation}
+
+\emph{Semantic-preservation loss}, penalizing drift in the domain-invariant content code between the source and the translation, so that geospatial layout (parcel boundaries, roads) is not altered by the style change:
+\begin{equation}
+\mathcal{L}_{sem} = \mathbb{E}\,\lVert \mathrm{Enc}_c(\hat{x}) - \mathrm{Enc}_c(x_{src}) \rVert_1
+\label{eq:sem}
+\end{equation}
+
+\emph{Identity loss}, requiring that conditioning the generator on the source's own style leaves the patch unchanged:
+\begin{equation}
+\mathcal{L}_{id} = \mathbb{E}\,\lVert G(x_{src}, z_{src}) - x_{src} \rVert_1
+\label{eq:id}
+\end{equation}
+
+\emph{Edge-preservation loss}, comparing Sobel gradient magnitudes between $\hat{x}$ and $x_{src}$ to keep agricultural parcel boundaries and road edges sharp:
+\begin{equation}
+\mathcal{L}_{edge} = \mathbb{E}\,\lVert \nabla_{Sobel}(\hat{x}) - \nabla_{Sobel}(x_{src}) \rVert_1
+\label{eq:edge}
+\end{equation}
+
+The total generator objective is
+\begin{align}
+\mathcal{L}_G ={}& \lambda_{adv}\mathcal{L}_{adv} + \lambda_{sty}\mathcal{L}_{sty} + \lambda_{cyc}\mathcal{L}_{cyc} \notag \\
+& + \lambda_{sem}\mathcal{L}_{sem} + \lambda_{id}\mathcal{L}_{id} + \lambda_{edge}\mathcal{L}_{edge}
+\label{eq:total}
+\end{align}
+with weights listed in Table~\ref{tab:hyperparams}. The framework additionally defines a geometric (SSIM-style) preservation loss $\mathcal{L}_{geo}$, activated when either the source or target domain is an off-nadir viewing-angle domain; because the PASTIS-HD experiment reported in Sec.~\ref{sec:results} uses only sensor domains, $\mathcal{L}_{geo}$ is inactive ($\lambda_{geo}\mathcal{L}_{geo}=0$) for the results shown here.
+
+\section{Dataset and Preprocessing}
+\label{sec:dataset}
+Experiments use patches derived from PASTIS-HD~\cite{garnot2021panoptic,astruc2024omnisat}, a real, publicly released benchmark of $2{,}433$ co-registered agricultural-parcel locations across metropolitan France, each available as Sentinel-2 optical time series, Sentinel-1 SAR time series, and (in its HD extension) a very-high-resolution SPOT~6/7 image. A conversion pipeline in the accompanying codebase matches patches across modalities by shared patch identifier and exports one $128\times128$, 4-channel tensor per modality per location: Sentinel-2 is reduced to its Red, Green, Blue, and near-infrared bands from a single temporal acquisition; SPOT~6/7 imagery is resized from its native $1280\times1280$ resolution to $128\times128$ and given a synthetic near-infrared proxy channel; Sentinel-1 SAR's VV and VH polarizations are extended with a derived ratio and average channel and normalized from decibel units. All modalities are scaled to $[-1,1]$. Of the up to $2{,}433$ locations available, this experiment converts $1{,}500$ per domain (limited by the conversion pipeline's patch cap), summarized in Table~\ref{tab:dataset}. The converted patches are the first $1{,}500$ in identifier order and come from three Sentinel-2 tiles. An 80/20 split by identifier order gives $1{,}200$ training and $300$ held-out patches per domain; as a consequence, all held-out patches belong to a single tile (T31TFM) that is only marginally represented in training, so the held-out evaluation is largely a test on a different region. The modalities are co-registered but not simultaneous: the first Sentinel-1 acquisition follows the first Sentinel-2 acquisition by 11~days at the median, and the SPOT imagery dates from 2019 whereas the Sentinel data start in September 2018. After conversion, the SAR difference channel is saturated at $+1$ for 97.9\% of its values. Training-split patches are augmented on the fly with random horizontal/vertical flips, random 90\textdegree{} rotations, and small per-channel Gaussian radiometric noise ($\sigma \sim \mathcal{U}[0, 0.01]$).
+
+\begin{table}[t]
+\centering
+\caption{Converted PASTIS-HD patches used in this study.}
+\label{tab:dataset}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Domain} & \textbf{Modality} & \textbf{Channels} & \textbf{Patches} \\
+\midrule
+Sentinel-2       & Multispectral optical (R,G,B,NIR) & 4 & 1{,}500 \\
+SPOT 6/7         & VHR optical (+NIR proxy)          & 4 & 1{,}500 \\
+Sentinel-1 SAR   & C-band radar (VV, VH, ratio, avg) & 4 & 1{,}500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Experimental Setup}
+The framework is implemented in Python~3.13 with PyTorch~$\geq$2.4, using NumPy, SciPy, Pillow, Matplotlib, and PyYAML for data handling, preprocessing, and visualization. Training is orchestrated by a single command-line entry point that sequentially runs domain-encoder pretraining followed by joint generator/discriminator training. All training and evaluation ran on the CPU of a laptop (Intel Core i7-9750H, 6 cores, 7.8~GB RAM, Windows~11) with a CPU-only PyTorch build. The generator and discriminator channel width was intentionally kept narrow (base width 32) to keep training tractable at this compute scale, rather than to match a specific reported baseline configuration. Table~\ref{tab:hyperparams} lists the hyperparameters used for the results in Sec.~\ref{sec:results}.
+
+\begin{table}[t]
+\centering
+\caption{Training hyperparameters.}
+\label{tab:hyperparams}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Stage 1 -- Domain Encoder} & \textbf{Value} \\
+\midrule
+Embedding dimension $d$            & 64 \\
+Optimizer                          & AdamW \\
+Learning rate                      & $5\times10^{-4}$ \\
+Weight decay                       & $1\times10^{-4}$ \\
+Contrastive temperature $\tau$     & 0.07 \\
+Epochs                             & 10 \\
+\midrule
+\textbf{Stage 2 -- Generator / Discriminator} & \textbf{Value} \\
+\midrule
+Base channel width                 & 32 \\
+Residual blocks                    & 4 \\
+Optimizer ($G$, $D$)               & Adam ($\beta_1{=}0.5$, $\beta_2{=}0.999$) \\
+Learning rate ($G$, $D$)           & $3\times10^{-4}$ \\
+LR schedule                        & Cosine annealing, $\eta_{min}{=}10^{-5}$ \\
+Gradient clipping (max norm)       & 1.0 \\
+Epochs                             & 12 \\
+Batch size                         & 8 \\
+$\lambda_{adv},\lambda_{sty},\lambda_{id}$ & 1.0 each \\
+$\lambda_{sem}$, $\lambda_{edge}$  & 2.0 each \\
+$\lambda_{cyc}$                    & 10.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Results and Discussion}
+\label{sec:results}
+All results are measured on the 300 held-out patches per domain with a fixed protocol and are single measurements of one trained model. The style of a target domain is the L2-normalized mean of the embeddings of its 1{,}200 training patches (the domain \emph{centroid}); domain labels and co-registered patches are used only for evaluation. Image metrics are computed on images rescaled to $[0,1]$ against the co-registered real target patch, with two reference baselines: the untranslated source patch (``Copy'') and a constant image equal to the mean of the target domain (``Const.'').
+
+\subsection{Domain encoder (Objective~1)}
+Table~\ref{tab:enc} summarizes the encoder. It solves its contrastive task on held-out patches (loss 0.24 against 2.08 for an uninformative embedding; 88.2\% top-1 retrieval of the second view among 900 patches), and its embeddings are spread continuously over the hypersphere instead of forming three tight clusters. They describe the sensor only moderately: 65.8\% of held-out patches are assigned to the correct sensor by the nearest centroid, against 33.3\% by chance, the sensors overlap (silhouette coefficient 0.11), and the effective dimensionality is about four. Retrieval of the co-registered patch of another sensor is at chance level, so the embedding does not carry scene content that is shared across sensors. A likely reason, which was not tested, is that instance discrimination rewards telling individual patches apart and contains no term that groups the patches of one sensor; the proximity-based positive pairs foreseen in the project plan were not used.
+
+\begin{table}[t]
+\centering
+\caption{Domain encoder on 300 held-out patches per domain (S2: Sentinel-2).}
+\label{tab:enc}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Measurement} & \textbf{Result} \\
+\midrule
+Held-out InfoNCE loss (batch 8; chance 2.08)        & 0.24 \\
+Top-1 instance retrieval among 900 patches          & 88.2\% \\
+Nearest-centroid domain accuracy (chance 33.3\%)    & 65.8\% \\
+\quad recall S2 / SPOT / SAR                        & 62.7 / 74.3 / 60.3\% \\
+5-nearest-neighbor domain accuracy                  & 63.7\% \\
+Cosine similarity within / between domains          & 0.32 / 0.04 \\
+Silhouette coefficient (cosine distance)            & 0.11 \\
+Participation ratio (of 64 dimensions)              & 3.85 \\
+Same-location retrieval across sensors, top-1       & 0.3\% (chance 0.3\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Conditional generator (Objective~2)}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.84\textwidth]{figures/fig_paired_translation.png}
+\caption{Translations of one held-out patch per source domain (first column of each row) into the two other domains, next to the real co-registered patch of each target domain. The style is the centroid embedding of the target domain, and the patches were chosen by a fixed random seed before inspection. Sentinel-1 patches are displayed as VV, VH, and the saturated difference channel in red, green, and blue.}
+\label{fig:paired}
+\end{figure*}
+
+\begin{table}[t]
+\centering
+\caption{Translation into each target on held-out patches. PSNR (dB) against the co-registered real target patch for the translation, for the copied source (Copy) and for a constant target-mean image (Const.); Style is the share of outputs that the encoder assigns to the target domain; Edge is the edge-map correlation with the source.}
+\label{tab:gen}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Pair} & \textbf{Transl.} & \textbf{Copy} & \textbf{Const.} & \textbf{Style} & \textbf{Edge} \\
+\midrule
+S2 $\rightarrow$ SPOT   & 14.6 & 13.1 & 17.2 & 57\% & 0.82 \\
+S2 $\rightarrow$ SAR    & 14.6 & 5.7 & 20.5 & 18\% & 0.87 \\
+SPOT $\rightarrow$ S2   & 13.5 & 13.1 & 17.8 & 29\% & 0.71 \\
+SPOT $\rightarrow$ SAR  & 16.8 & 7.4 & 20.5 & 80\% & 0.82 \\
+SAR $\rightarrow$ S2    & 13.3 & 5.7 & 17.8 & 12\% & 0.94 \\
+SAR $\rightarrow$ SPOT  & 13.0 & 7.4 & 17.2 & 45\% & 0.92 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Fig.~\ref{fig:paired} and Table~\ref{tab:gen} summarize the generator. \emph{Structure is preserved:} the edge-map correlation between the source and the output is 0.71 to 0.94, higher than the 0.61 to 0.70 between real patches of different sensors, and parcels, the river, and the road remain recognizable in the figure. \emph{The style vector is used:} with the correct target style the PSNR is higher than with the style of the third domain for five of the six pairs (by 3.3 to 7.6~dB), and the translation is better than copying the source for all six pairs, most strongly for pairs that involve SAR. \emph{Target radiometry is not reproduced:} a constant image with the mean of the target domain agrees better with the real target patch than the translation for all six pairs (by 2.6 to 5.9~dB), the encoder assigns the outputs to the target domain in only 12\% to 80\% of the cases, and translations into Sentinel-2 are a blurred purple-gray haze whose channel means are identical for all three sources (within 0.001) and much brighter than real Sentinel-2 patches (by 0.59 in the blue channel on a $[-1,1]$ scale). The identity mapping of Sentinel-2 is also poorly reproduced (13.7~dB, against 20.3~dB for SPOT and 24.3~dB for SAR), so Sentinel-2 is the weak point of the generator both as source and as target. The acquisition-date differences between the modalities bound the achievable pixel agreement, but they do not explain why the translation is worse than a constant image.
+
+\emph{Continuity of the style space} was probed by interpolating between two domain centroids, $z(\alpha)=(1-\alpha)\bar z_a+\alpha\bar z_b$ renormalized to unit length, for 300 source patches. For the two pairs that involve SAR the output changes smoothly and nearly linearly (linearity ratio 0.91 and 0.96, monotone for 96\% and 100\% of the patches). For Sentinel-2 and SPOT the change is about half as large, is concentrated in the first step from $\alpha=0$ to $\alpha=0.25$, and is monotone for only 41\% of the patches. The generator has 1.59~M and the encoder 0.89~M parameters, and a translation takes about 84~ms per patch on the CPU.
+
+\section{Comparative Analysis}
+Table~\ref{tab:gap} in Sec.~III already situates the proposed encoder-generator pair against the closest prior methods on the specific properties motivating this work. In the implementation, the design goals of Table~\ref{tab:gap} are met at the architectural level: training uses no domain labels, one generator serves all ordered pairs of three domains, and the domain code is a continuous 64-dimensional embedding. The quality of the result, however, cannot be compared with the cited methods, because none of them was trained on the same data and their published figures come from other datasets and tasks; no claim is made that the approach is better than SS(DA)$^2$, StarGAN~v2, or the others.
+
+\section{Limitations}
+\label{sec:limitations}
+Several limitations should be considered when interpreting the results in Sec.~\ref{sec:results}. First, the held-out patches come from a single Sentinel-2 tile while the training set is dominated by two other tiles, so the results combine model quality with a region shift; in particular, the domain centroids come from mostly different regions than the patches they are applied to. Second, the modalities are not simultaneous, which bounds pixel-level agreement with the co-registered reference, and the preprocessing has artifacts (a saturated SAR channel and a synthetic fourth SPOT channel). Third, each model was trained once, with a short schedule (10 encoder and 12 generator epochs), a narrow network (base width 32), and a CPU-only laptop (Sec.~VI); the training loops are not seeded, the run-to-run variation is unknown, no ablation of the six generator losses was run, and no other translation method was trained on the same data for comparison. Fourth, PSNR and SSIM measure agreement with a co-registered image and not realism, and the style-transfer success rate is judged by the same encoder that conditions the generator, so it is only as reliable as that encoder. Fifth, only three sensor domains, one geographic setting, and $1{,}500$ of the $2{,}433$ locations are used, the larger MSC-France corpus foreseen for encoder pretraining was not used, and the angle-domain conditioning implemented in the framework was not exercised. Finally, generalization to unseen sensor pairs and downstream accuracy (Objectives~3--4) are not evaluated.
+
+\section{Conclusion and Future Work}
+This paper presented the first two components of a self-supervised, multi-domain adaptation framework for satellite imagery: a contrastive domain encoder that learns continuous, label-free embeddings of sensor style from unlabeled multi-sensor patches, and a unified AdaIN-conditioned generator that translates a source patch's content into an arbitrary target style using that embedding, in place of the discrete domain labels required by prior multi-domain translators. Implemented and trained on real PASTIS-HD imagery across Sentinel-2, SPOT~6/7, and Sentinel-1 SAR, the framework meets the design goals at the architectural level -- no domain labels, one model for all ordered domain pairs, a continuous domain code. The measured quality is limited: the encoder identifies the sensor only moderately (65.8\% against 33.3\% by chance), and the generator preserves scene structure and uses the style vector, but does not reproduce the radiometry of the target sensor, and translations into Sentinel-2 fail.
+
+Building directly on these findings, future work will: (i) replace the augmented-view positives of the encoder by sensor-aware positive pairs based on spatial and temporal proximity, and pretrain on the larger MSC-France corpus; (ii) correct the data issues found here by using all PASTIS-HD patches with a tile-stratified split, temporally matched acquisitions, and a non-saturating SAR channel; (iii) train wider networks for longer on a GPU, with seeded and logged runs, loss ablations, and baselines trained on the same data; and (iv) carry out the leave-one-domain-pair-out and zero-shot (SpaceNet~6) generalization evaluation and the downstream crop-classification and segmentation evaluation that constitute Objectives~3 and~4 of the broader project.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
