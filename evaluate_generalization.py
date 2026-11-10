@@ -7,7 +7,7 @@ from models.downstream_task import SatelliteUNet
 from data.dataset import MultiSensorSatelliteDataset
 from data.synthetic_generator import SyntheticSatelliteGenerator
 from utils.metrics import compute_segmentation_metrics, compute_psnr, compute_ssim
-from utils.inference import batch_forward, batch_generator, predict_with_tta, dual_path_confidence_ensemble
+from utils.inference import batch_forward, batch_generator, predict_with_tta
 from utils.visualizer import (
     plot_translation_matrix,
     plot_continuous_interpolation,
@@ -20,7 +20,8 @@ def evaluate_framework(config, encoder=None, generator=None, downstream_model=No
     """
     Stage 4: Comprehensive Evaluation & Generalization Benchmarking
       - Downstream Task Accuracy under Domain Shift (No DA vs Proposed DA vs Oracle)
-      - Leave-One-Pair-Out Sensor Generalization
+      - Leave-One-Pair-Out Sensor Generalization (see experiments/objective3.py;
+        this function only evaluates the checkpoints it is given)
       - Continuous Style Space Interpolation
       - Generative Fidelity (PSNR, SSIM, Cycle Consistency)
     """
@@ -110,18 +111,16 @@ def evaluate_framework(config, encoder=None, generator=None, downstream_model=No
             raw_preds = probs_raw.argmax(dim=1)
             raw_metrics = compute_segmentation_metrics(raw_preds, tgt_masks, num_cls, ignore_index=ign_idx)
 
-            # B. Proposed Synergistic Dual-Path Adaptation + TTA
-            # Path 1: Pixel-space translation (Target -> Source Canonical Style via Generator)
+            # B. Proposed: pixel-space translation (target -> source canonical style via the generator).
+            # NOTE: an earlier version averaged this with a "feature-space" path that was just the
+            # raw prediction above, so the "adapted" number was partly the baseline itself. The
+            # adapted number is now the translated-input prediction alone. Fuller comparisons
+            # (classical baselines, training on translated data, DANN, supervised upper bound,
+            # several seeds) live in experiments/objective4.py.
             z_src_expanded = canonical_src_style.repeat(tgt_imgs.size(0), 1)
             adapted_imgs = batch_generator(generator, tgt_imgs, z_src_expanded)
             probs_pixel = predict_with_tta(downstream_model, adapted_imgs)
-
-            # Path 2: Feature-space adaptation (Native target with DANN + Self-Training)
-            probs_feat = predict_with_tta(downstream_model, tgt_imgs)
-
-            # Adaptive Confidence-Weighted Dual-Path Ensemble (Pixel + Feature representations)
-            probs_ensemble = dual_path_confidence_ensemble(probs_pixel, probs_feat)
-            adapted_preds = probs_ensemble.argmax(dim=1)
+            adapted_preds = probs_pixel.argmax(dim=1)
             adapted_metrics = compute_segmentation_metrics(adapted_preds, tgt_masks, num_cls, ignore_index=ign_idx)
             
             # C. Structural fidelity (SSIM, PSNR)
@@ -134,7 +133,7 @@ def evaluate_framework(config, encoder=None, generator=None, downstream_model=No
         print(f"\n[Domain Shift: {source_domain} -> {tgt_domain}]", flush=True)
         print(f"  • Source-Only (No DA) : mIoU = {raw_metrics['mIoU']*100:.2f}% | Acc = {raw_metrics['overall_accuracy']*100:.2f}%", flush=True)
         print(f"  • Proposed Adapted    : mIoU = {adapted_metrics['mIoU']*100:.2f}% | Acc = {adapted_metrics['overall_accuracy']*100:.2f}%", flush=True)
-        print(f"  • Downstream Gain     : +{gain_miou:.2f}% mIoU | +{gain_acc:.2f}% Accuracy (SSIM: {ssim_val:.3f})", flush=True)
+        print(f"  • Downstream Gain     : {gain_miou:+.2f}% mIoU | {gain_acc:+.2f}% Accuracy (SSIM: {ssim_val:.3f})", flush=True)
         
         results_table.append({
             "target_domain": tgt_domain,

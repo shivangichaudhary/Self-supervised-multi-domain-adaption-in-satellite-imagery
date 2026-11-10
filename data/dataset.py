@@ -51,10 +51,17 @@ class MultiSensorSatelliteDataset(Dataset):
     For training split, applies random flips, 90-degree rotations, and Gaussian noise augmentation
     to effectively multiply dataset size and enforce spatially-invariant feature learning.
     """
-    def __init__(self, root_dir: str, domains=None, split: str = "train", split_ratio: float = 0.8, transform=None):
+    def __init__(self, root_dir: str, domains=None, split: str = "train", split_ratio: float = 0.8, transform=None,
+                 excluded_pairs=None, preload=False):
         self.root_dir = root_dir
+        # preload=True memoises every file after its first read (≈1.4 GB for the 3,600 PASTIS train
+        # patches), which removes the per-iteration disk reads that dominate generator training.
+        self._memo = {} if preload else None
         self.transform = transform
         self.split = split
+        # Ordered (source_domain, target_domain) pairs that must never be sampled together.
+        # Used for the leave-one-pair-out experiment (Objective 3).
+        self.excluded_pairs = {tuple(p) for p in (excluded_pairs or [])}
         self.augment = (split == "train")  # augmentation only during training
         
         if domains is None:
@@ -101,10 +108,17 @@ class MultiSensorSatelliteDataset(Dataset):
     def __len__(self):
         return len(self.all_samples)
 
+    def _load(self, path):
+        if self._memo is None:
+            return torch.load(path, weights_only=True)
+        if path not in self._memo:
+            self._memo[path] = torch.load(path, weights_only=True)
+        return self._memo[path].clone()
+
     def __getitem__(self, idx):
         src_item = self.all_samples[idx]
-        src_img = torch.load(src_item["image_path"], weights_only=True)
-        src_mask = torch.load(src_item["mask_path"], weights_only=True) if src_item["mask_path"] else torch.zeros((src_img.shape[1], src_img.shape[2]), dtype=torch.long)
+        src_img = self._load(src_item["image_path"])
+        src_mask = self._load(src_item["mask_path"]) if src_item["mask_path"] else torch.zeros((src_img.shape[1], src_img.shape[2]), dtype=torch.long)
         
         if self.transform:
             src_img, src_mask = self.transform(src_img, src_mask)
@@ -114,11 +128,12 @@ class MultiSensorSatelliteDataset(Dataset):
             src_img, src_mask = _apply_augmentation(src_img, src_mask)
             
         # Sample a random target domain and an exemplar from that domain (for style conditioning)
-        target_domain = random.choice(self.domains)
+        allowed_targets = [d for d in self.domains if (src_item["domain"], d) not in self.excluded_pairs]
+        target_domain = random.choice(allowed_targets or self.domains)
         tgt_items = self.samples_by_domain[target_domain]
         tgt_item = random.choice(tgt_items) if len(tgt_items) > 0 else src_item
         
-        tgt_img = torch.load(tgt_item["image_path"], weights_only=True)
+        tgt_img = self._load(tgt_item["image_path"])
         if self.transform:
             tgt_img = self.transform(tgt_img)
 

@@ -7,6 +7,7 @@ from models.discriminator import MultiDomainProjectionDiscriminator
 from models.domain_encoder import ContinuousDomainEncoder
 from models.losses import MultiDomainLosses
 from data.dataset import MultiSensorSatelliteDataset
+from utils.seed import set_seed
 
 def train_generator(config, encoder=None, device="cpu"):
     """
@@ -20,7 +21,12 @@ def train_generator(config, encoder=None, device="cpu"):
     gen_cfg = config["generator"]
     output_dir = config["output_dir"]
     os.makedirs(output_dir, exist_ok=True)
-    
+    set_seed(config.get("seed", 42))
+    # Ordered (src, tgt) pairs withheld from training; see Objective 3 (leave-one-pair-out).
+    excluded_pairs = gen_cfg.get("excluded_pairs", [])
+    if excluded_pairs:
+        print(f"  [Hold-out] Ordered pairs never sampled during training: {excluded_pairs}")
+
     # Load Domain Encoder
     if encoder is None:
         encoder = ContinuousDomainEncoder(
@@ -69,7 +75,9 @@ def train_generator(config, encoder=None, device="cpu"):
     dataset = MultiSensorSatelliteDataset(
         root_dir=data_cfg["data_dir"],
         domains=data_cfg["domains"],
-        split="train"
+        split="train",
+        excluded_pairs=excluded_pairs,
+        preload=True
     )
     loader = DataLoader(dataset, batch_size=data_cfg["batch_size"], shuffle=True, drop_last=True)
     

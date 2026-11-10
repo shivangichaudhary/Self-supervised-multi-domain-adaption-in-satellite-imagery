@@ -1,0 +1,50 @@
+[*] device=cuda seeds=[0, 1, 2] epochs=20
+{'sentinel2': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'spot6': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'sentinel1_sar': ((1200, 4, 128, 128), (300, 4, 128, 128))}
+[*] prepared translated/matched data in 24s
+
+===== seed 0 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/20  loss 2.9596
+      epoch 05/20  loss 2.5386
+      epoch 10/20  loss 2.4257
+      epoch 15/20  loss 2.3481
+      epoch 20/20  loss 2.2999
+  [train] source_only_s2 done in 518s
+  S2 in-domain: {'mIoU': 8.47010612487793, 'acc': 50.989217401787414, 'f1': 12.412096560001373}
+  spot6: source_only 2.36 | meanstd 2.43 | histmatch 3.26 | gen_test_time 0.36 | gen_raw_ensemble 2.23
+  sentinel1_sar: source_only 0.02 | meanstd 1.02 | histmatch 0.55 | gen_test_time 0.39 | gen_raw_ensemble 0.15
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/20  loss 3.0468
+      epoch 05/20  loss 2.6898
+      epoch 10/20  loss 2.6017
+      epoch 15/20  loss 2.5369
+      epoch 20/20  loss 2.4851
+  [train] train_gen_spot6 done in 493s
+  spot6 train_gen: {'mIoU': 3.155774623155594, 'acc': 38.00418220144418, 'f1': 4.904225841164589}
+  [train] train_stats_spot6 (1200 imgs)
+      epoch 01/20  loss 2.9636
+      epoch 05/20  loss 2.5350
+      epoch 10/20  loss 2.4234
+      epoch 15/20  loss 2.3478
+      epoch 20/20  loss 2.3031
+  [train] train_stats_spot6 done in 466s
+  spot6 train_stats: {'mIoU': 2.2971944883465767, 'acc': 37.73366432825051, 'f1': 3.3313926309347153}
+  [train] train_gen_sentinel1_sar (1200 imgs)
+      epoch 01/20  loss 3.0499
+      epoch 05/20  loss 2.6998
+      epoch 10/20  loss 2.6301
+      epoch 15/20  loss 2.5735
+      epoch 20/20  loss 2.5237
+  [train] train_gen_sentinel1_sar done in 521s
+  sentinel1_sar train_gen: {'mIoU': 2.2705858573317528, 'acc': 40.38716388591933, 'f1': 3.242344781756401}
+  [train] train_stats_sentinel1_sar (1200 imgs)
+      epoch 01/20  loss 2.9710
+      epoch 05/20  loss 2.5243
+      epoch 10/20  loss 2.4452
+      epoch 15/20  loss 2.3714
+      epoch 20/20  loss 2.3228
+  [train] train_stats_sentinel1_sar done in 512s
+  sentinel1_sar train_stats: {'mIoU': 1.9774453714489937, 'acc': 23.489758127281462, 'f1': 2.967836707830429}
+  [train] train_s2_plus_gen_all (3600 imgs)
+      epoch 01/20  loss 3.0947
+      epoch 05/20  loss 2.7423
