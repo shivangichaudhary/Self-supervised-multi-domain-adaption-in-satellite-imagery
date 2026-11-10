@@ -31,8 +31,8 @@ No prior method combines all three of the following for satellite imagery:
 |---|-----------|--------|
 | 1 | Domain encoder that learns continuous domain embeddings from unlabeled multi-sensor patches | Done |
 | 2 | Single conditional generator that translates content into the style of an arbitrary target domain | Done |
-| 3 | Generalization to sensor pairs never jointly seen in training (leave-one-pair-out, zero-shot) | Future work |
-| 4 | Downstream impact: real classification/segmentation accuracy gains | Future work |
+| 3 | Multi-domain and multi-angle adaptation | Future work |
+| 4 | Downstream segmentation and evaluation | Future work |
 
 ## Method
 
@@ -52,7 +52,7 @@ Stage 2 (Objective 2): one conditional generator (encoder frozen)
 - Multi-scale features with squeeze-and-excitation (SE) channel attention
 - Mean and standard-deviation style statistics
 - InfoNCE contrastive loss
-- Output is a continuous domain style vector. An optional viewing-angle branch exists but is unused here.
+- Output is a continuous domain style vector. An optional viewing-angle branch exists but is unused here (it is for the multi-angle part of Objective 3).
 
 **Stage 2: style-guided translation**
 - The content encoder extracts spatial features, and the target style vector drives AdaIN.
@@ -129,8 +129,8 @@ models/                     domain_encoder, generator, discriminator, losses, do
 utils/                      metrics, inference, visualizer
 train_domain_encoder.py     Stage 1 training
 train_generator.py          Stage 2 training
-train_downstream.py         downstream task training (Objective 4, not yet evaluated)
-evaluate_generalization.py  unseen-pair evaluation (Objective 3, not yet evaluated)
+train_downstream.py         downstream segmentation training (Objective 4, not yet evaluated)
+evaluate_generalization.py  multi-domain / multi-angle evaluation (Objectives 3 and 4, not yet evaluated)
 demo_app.py                 interactive demo
 embed_dashboard.py          builds the self-contained visualizer dashboard
 tests/                      pytest suite
@@ -181,8 +181,8 @@ pytest
 
 ## Future work
 
-- **Objective 3:** leave-one-pair-out and zero-shot (SpaceNet 6) generalization tests.
-- **Objective 4:** downstream crop classification and segmentation accuracy gains.
+- **Objective 3:** multi-domain and multi-angle adaptation. Add viewing-angle domains (nadir to oblique) alongside the sensor domains, and test on sensor pairs not seen together in training (leave-one-pair-out, zero-shot on SpaceNet 6).
+- **Objective 4:** downstream segmentation and evaluation: does adapting across sensors and angles improve segmentation accuracy?
 - Better encoder pretext task: sensor-aware positive pairs, pretraining on MSC-France.
 - Fix the data issues: tile-stratified split, matched acquisition dates, non-saturating SAR channel.
 - Train wider on a GPU with seeds, loss ablations, and baselines (SS(DA)², StarGAN v2).
