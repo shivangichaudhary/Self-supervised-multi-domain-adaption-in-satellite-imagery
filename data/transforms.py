@@ -1,6 +1,15 @@
 import torch
-import torchvision.transforms.functional as TF
 import random
+
+
+# Plain-torch flips (identical to torchvision's TF.hflip / TF.vflip on (..., H, W) tensors), so the
+# encoder trainer does not need torchvision installed.
+def _hflip(x: torch.Tensor) -> torch.Tensor:
+    return torch.flip(x, dims=[-1])
+
+
+def _vflip(x: torch.Tensor) -> torch.Tensor:
+    return torch.flip(x, dims=[-2])
 
 class SatelliteTransforms:
     """
@@ -21,15 +30,15 @@ class SatelliteTransforms:
 
         # Random horizontal flip
         if random.random() > 0.5:
-            img = TF.hflip(img)
+            img = _hflip(img)
             if mask is not None:
-                mask = TF.hflip(mask)
+                mask = _hflip(mask)
 
         # Random vertical flip
         if random.random() > 0.5:
-            img = TF.vflip(img)
+            img = _vflip(img)
             if mask is not None:
-                mask = TF.vflip(mask)
+                mask = _vflip(mask)
 
         # Random 90 degree rotation
         rot = random.choice([0, 1, 2, 3])

@@ -88,14 +88,58 @@ def obj3(path):
     return "\n".join(lines)
 
 
+def obj3_paired(path):
+    """Per-seed paired difference (held-out-pair generator minus full generator, same seed) in PSNR."""
+    M = json.load(open(path))
+    seeds = sorted(M)
+    lines = [f"\n**Paired difference in PSNR, held-out-pair generator minus full generator (same seed), seeds {seeds}**\n",
+             "| Direction | Δ PSNR per seed (dB) | mean ± std | seeds with Δ ≥ 0 |", "|---|---|---|---|"]
+    for a, b in [("sentinel2", "spot6"), ("sentinel2", "sentinel1_sar"), ("spot6", "sentinel1_sar")]:
+        name = f"hold_{a}_{b}"
+        for s, t in ((a, b), (b, a)):
+            key = f"{s}->{t}"
+            d = [M[x][name]["fidelity"][key]["translation"]["psnr"] - M[x]["full"]["fidelity"][key]["translation"]["psnr"]
+                 for x in seeds if name in M[x] and "full" in M[x]]
+            if d:
+                lines.append(f"| {SHORT[s]}→{SHORT[t]} | {', '.join(f'{v:+.2f}' for v in d)} | {ms(d)} | {sum(v >= 0 for v in d)}/{len(d)} |")
+    return "\n".join(lines)
+
+
+def zero_shot(path):
+    """Zero-shot SpaceNet 6 table: every generator, every setting, with 95% bootstrap CIs of the paired differences."""
+    R = json.load(open(path))
+    gens = [g for g in R if isinstance(R[g], dict)]
+    settings = sorted({k for g in gens for k in R[g]})
+    fmt = lambda d: (f"{d['mean']:+.2f} [{d['ci95'][0]:+.2f}, {d['ci95'][1]:+.2f}]"
+                     if isinstance(d.get("ci95"), list) and len(d["ci95"]) == 2 else f"{d['mean']:+.2f}")
+    lines = [f"Zero-shot SpaceNet 6 (n={R.get('n_patches')} patches) — generators never saw SN6; PSNR dB, mean [95% bootstrap CI over patches]\n"]
+    for st in settings:
+        lines += [f"\n**{st}**\n", "| Generator | PSNR | SSIM | Edge corr | Δ PSNR vs copy-source | Δ PSNR vs constant target-mean |", "|---|---|---|---|---|---|"]
+        ref = None
+        for g in gens:
+            r = R[g].get(st)
+            if not r:
+                continue
+            ref = ref or r
+            lines.append(f"| {g} | {r['translation']['psnr']:.2f} | {r['translation']['ssim']:.3f} | {r['translation']['edge_corr']:.3f} | "
+                         f"{fmt(r['translation_minus_copy_source']['psnr'])} | {fmt(r['translation_minus_constant_target_mean']['psnr'])} |")
+        if ref:
+            for rk, rl in (("copy_source", "reference: copy source"), ("constant_target_mean", "reference: constant target-mean")):
+                lines.append(f"| {rl} | {ref[rk]['psnr']:.2f} | {ref[rk]['ssim']:.3f} | {ref[rk]['edge_corr']:.3f} | | |")
+    return "\n".join(lines)
+
+
 if __name__ == "__main__":
     root = sys.argv[1] if len(sys.argv) > 1 else "results"
     out = []
     p4, p3 = os.path.join(root, "objective4", "metrics.json"), os.path.join(root, "objective3", "metrics.json")
+    pz = os.path.join(root, "objective3", "zero_shot_sn6.json")
     if os.path.exists(p4):
         out.append(obj4(p4))
     if os.path.exists(p3):
-        out.append(obj3(p3))
+        out.append(obj3(p3) + "\n" + obj3_paired(p3))
+    if os.path.exists(pz):
+        out.append(zero_shot(pz))
     text = "\n\n".join(out)
     print(text)
     open(os.path.join(root, "summary.md"), "w", encoding="utf-8").write(text + "\n")

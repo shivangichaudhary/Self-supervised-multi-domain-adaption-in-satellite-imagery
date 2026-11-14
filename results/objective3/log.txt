@@ -1,0 +1,460 @@
+
+===== seed 0 =====
+
+--- training generator: seed 0, full
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Epoch 01/12] D Loss: 0.1332 | G Loss: 6.2055 (Adv: 1.08, Cyc: 3.44, Edge: 0.77)
+  [Epoch 02/12] D Loss: 0.0346 | G Loss: 5.2124 (Adv: 0.97, Cyc: 3.32, Edge: 0.78)
+  [Epoch 03/12] D Loss: 0.0144 | G Loss: 4.7465 (Adv: 0.94, Cyc: 2.26, Edge: 0.70)
+  [Epoch 04/12] D Loss: 0.0104 | G Loss: 4.4411 (Adv: 1.01, Cyc: 2.05, Edge: 0.65)
+  [Epoch 05/12] D Loss: 0.0076 | G Loss: 4.1213 (Adv: 0.89, Cyc: 1.35, Edge: 0.63)
+  [Epoch 06/12] D Loss: 0.0049 | G Loss: 3.8807 (Adv: 0.98, Cyc: 1.39, Edge: 0.65)
+  [Epoch 07/12] D Loss: 0.0030 | G Loss: 3.7026 (Adv: 1.01, Cyc: 1.78, Edge: 0.60)
+  [Epoch 08/12] D Loss: 0.0014 | G Loss: 3.5783 (Adv: 1.00, Cyc: 1.30, Edge: 0.57)
+  [Epoch 09/12] D Loss: 0.0021 | G Loss: 3.4771 (Adv: 1.00, Cyc: 0.96, Edge: 0.50)
+  [Epoch 10/12] D Loss: 0.0024 | G Loss: 3.4138 (Adv: 1.00, Cyc: 1.38, Edge: 0.56)
+  [Epoch 11/12] D Loss: 0.0034 | G Loss: 3.3636 (Adv: 1.01, Cyc: 1.45, Edge: 0.64)
+  [Epoch 12/12] D Loss: 0.0041 | G Loss: 3.3335 (Adv: 0.99, Cyc: 1.12, Edge: 0.52)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed0_full\generator.pth
+
+--- done in 2885s
+
+--- training generator: seed 0, hold_sentinel2_spot6
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'spot6'], ['spot6', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1212 | G Loss: 6.2790 (Adv: 1.07, Cyc: 3.83, Edge: 0.83)
+  [Epoch 02/12] D Loss: 0.0259 | G Loss: 5.3858 (Adv: 0.90, Cyc: 2.42, Edge: 0.80)
+  [Epoch 03/12] D Loss: 0.0134 | G Loss: 4.7733 (Adv: 0.90, Cyc: 1.90, Edge: 0.63)
+  [Epoch 04/12] D Loss: 0.0125 | G Loss: 4.3204 (Adv: 0.94, Cyc: 1.76, Edge: 0.65)
+  [Epoch 05/12] D Loss: 0.0064 | G Loss: 4.1046 (Adv: 1.11, Cyc: 1.46, Edge: 0.67)
+  [Epoch 06/12] D Loss: 0.0037 | G Loss: 3.8943 (Adv: 0.90, Cyc: 1.65, Edge: 0.55)
+  [Epoch 07/12] D Loss: 0.0019 | G Loss: 3.7268 (Adv: 0.99, Cyc: 1.78, Edge: 0.53)
+  [Epoch 08/12] D Loss: 0.0018 | G Loss: 3.6216 (Adv: 1.00, Cyc: 1.21, Edge: 0.61)
+  [Epoch 09/12] D Loss: 0.0007 | G Loss: 3.5263 (Adv: 0.99, Cyc: 1.94, Edge: 0.54)
+  [Epoch 10/12] D Loss: 0.0005 | G Loss: 3.4507 (Adv: 1.00, Cyc: 1.51, Edge: 0.54)
+  [Epoch 11/12] D Loss: 0.0006 | G Loss: 3.4074 (Adv: 1.00, Cyc: 1.09, Edge: 0.56)
+  [Epoch 12/12] D Loss: 0.0005 | G Loss: 3.3753 (Adv: 1.00, Cyc: 1.21, Edge: 0.50)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed0_hold_sentinel2_spot6\generator.pth
+
+--- done in 2714s
+
+--- training generator: seed 0, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1314 | G Loss: 6.1742 (Adv: 1.01, Cyc: 3.26, Edge: 0.83)
+  [Epoch 02/12] D Loss: 0.0286 | G Loss: 5.0109 (Adv: 0.93, Cyc: 1.76, Edge: 0.76)
+  [Epoch 03/12] D Loss: 0.0148 | G Loss: 4.4755 (Adv: 0.94, Cyc: 1.71, Edge: 0.73)
+  [Epoch 04/12] D Loss: 0.0092 | G Loss: 4.1602 (Adv: 0.97, Cyc: 1.44, Edge: 0.61)
+  [Epoch 05/12] D Loss: 0.0049 | G Loss: 3.9190 (Adv: 0.97, Cyc: 1.58, Edge: 0.67)
+  [Epoch 06/12] D Loss: 0.0041 | G Loss: 3.7763 (Adv: 1.04, Cyc: 2.19, Edge: 0.68)
+  [Epoch 07/12] D Loss: 0.0020 | G Loss: 3.6568 (Adv: 1.04, Cyc: 1.22, Edge: 0.49)
+  [Epoch 08/12] D Loss: 0.0017 | G Loss: 3.5456 (Adv: 0.99, Cyc: 1.43, Edge: 0.58)
+  [Epoch 09/12] D Loss: 0.0008 | G Loss: 3.4692 (Adv: 0.99, Cyc: 1.33, Edge: 0.60)
+  [Epoch 10/12] D Loss: 0.0011 | G Loss: 3.4023 (Adv: 1.00, Cyc: 1.39, Edge: 0.56)
+  [Epoch 11/12] D Loss: 0.0008 | G Loss: 3.3451 (Adv: 0.98, Cyc: 1.12, Edge: 0.52)
+
+
+##### resumed Wed Nov 11 22:33:03 IST 2026 after the first run was killed during hold_sentinel2_sentinel1_sar (epoch 11/12); finished checkpoints are reused #####
+
+===== seed 0 =====
+--- reusing results/objective3\ckpt\seed0_full
+--- reusing results/objective3\ckpt\seed0_hold_sentinel2_spot6
+
+--- training generator: seed 0, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1267 | G Loss: 6.2570 (Adv: 1.04, Cyc: 3.94, Edge: 0.81)
+  [Epoch 02/12] D Loss: 0.0303 | G Loss: 5.3648 (Adv: 0.98, Cyc: 1.81, Edge: 0.81)
+  [Epoch 03/12] D Loss: 0.0180 | G Loss: 4.8648 (Adv: 0.98, Cyc: 2.35, Edge: 0.72)
+  [Epoch 04/12] D Loss: 0.0106 | G Loss: 4.5297 (Adv: 1.02, Cyc: 2.34, Edge: 0.70)
+  [Epoch 05/12] D Loss: 0.0060 | G Loss: 4.2515 (Adv: 0.99, Cyc: 1.76, Edge: 0.67)
+  [Epoch 06/12] D Loss: 0.0038 | G Loss: 3.9872 (Adv: 1.02, Cyc: 1.90, Edge: 0.66)
+
+##### 2026-11-12 01:07:36 attempt 1: experiments/objective3.py --seeds 0
+
+===== seed 0 =====
+--- reusing results/objective3\ckpt\seed0_full
+--- reusing results/objective3\ckpt\seed0_hold_sentinel2_spot6
+
+--- training generator: seed 0, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1337 | G Loss: 6.1021 (Adv: 1.04, Cyc: 2.84, Edge: 0.79)
+  [Epoch 02/12] D Loss: 0.0356 | G Loss: 4.9542 (Adv: 1.03, Cyc: 1.74, Edge: 0.74)
+  [Epoch 03/12] D Loss: 0.0198 | G Loss: 4.6142 (Adv: 0.98, Cyc: 2.40, Edge: 0.71)
+  [Epoch 04/12] D Loss: 0.0113 | G Loss: 4.4086 (Adv: 1.00, Cyc: 1.94, Edge: 0.66)
+  [Epoch 05/12] D Loss: 0.0082 | G Loss: 4.1670 (Adv: 0.96, Cyc: 1.61, Edge: 0.66)
+  [Epoch 06/12] D Loss: 0.0049 | G Loss: 3.9281 (Adv: 1.00, Cyc: 1.94, Edge: 0.66)
+  [Epoch 07/12] D Loss: 0.0025 | G Loss: 3.7500 (Adv: 1.07, Cyc: 1.34, Edge: 0.50)
+  [Epoch 08/12] D Loss: 0.0028 | G Loss: 3.6366 (Adv: 1.04, Cyc: 1.48, Edge: 0.60)
+  [Epoch 09/12] D Loss: 0.0024 | G Loss: 3.5405 (Adv: 1.01, Cyc: 1.00, Edge: 0.60)
+  [Epoch 10/12] D Loss: 0.0047 | G Loss: 3.4642 (Adv: 1.00, Cyc: 1.43, Edge: 0.57)
+  [Epoch 11/12] D Loss: 0.0047 | G Loss: 3.4061 (Adv: 0.97, Cyc: 1.11, Edge: 0.50)
+  [Epoch 12/12] D Loss: 0.0051 | G Loss: 3.3788 (Adv: 0.99, Cyc: 1.12, Edge: 0.59)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed0_hold_sentinel2_sentinel1_sar\generator.pth
+
+--- done in 2804s
+
+--- training generator: seed 0, hold_spot6_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['spot6', 'sentinel1_sar'], ['sentinel1_sar', 'spot6']]
+  [Epoch 01/12] D Loss: 0.1269 | G Loss: 6.2139 (Adv: 1.08, Cyc: 3.79, Edge: 0.84)
+  [Epoch 02/12] D Loss: 0.0300 | G Loss: 5.0912 (Adv: 0.99, Cyc: 1.81, Edge: 0.78)
+  [Epoch 03/12] D Loss: 0.0135 | G Loss: 4.6930 (Adv: 0.75, Cyc: 2.10, Edge: 0.66)
+  [Epoch 04/12] D Loss: 0.0060 | G Loss: 4.4271 (Adv: 0.94, Cyc: 2.02, Edge: 0.64)
+  [Epoch 05/12] D Loss: 0.0047 | G Loss: 4.1075 (Adv: 1.03, Cyc: 1.68, Edge: 0.65)
+  [Epoch 06/12] D Loss: 0.0027 | G Loss: 3.9067 (Adv: 1.03, Cyc: 2.41, Edge: 0.60)
+  [Epoch 07/12] D Loss: 0.0019 | G Loss: 3.7351 (Adv: 0.99, Cyc: 1.25, Edge: 0.58)
+  [Epoch 08/12] D Loss: 0.0008 | G Loss: 3.6103 (Adv: 0.99, Cyc: 1.24, Edge: 0.58)
+  [Epoch 09/12] D Loss: 0.0007 | G Loss: 3.5142 (Adv: 1.00, Cyc: 1.31, Edge: 0.51)
+  [Epoch 10/12] D Loss: 0.0006 | G Loss: 3.4411 (Adv: 1.00, Cyc: 1.45, Edge: 0.54)
+  [Epoch 11/12] D Loss: 0.0013 | G Loss: 3.3887 (Adv: 1.00, Cyc: 1.09, Edge: 0.54)
+  [Epoch 12/12] D Loss: 0.0008 | G Loss: 3.3553 (Adv: 1.00, Cyc: 1.79, Edge: 0.61)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed0_hold_spot6_sentinel1_sar\generator.pth
+
+--- done in 2651s
+  [train] source_only_s2 435s
+  [train] full: train on S2->spot6 436s
+  [train] full: train on S2->sentinel1_sar 439s
+  full: {"test_time_spot6->s2": {"mIoU": 0.9618849493563175, "acc": 4.876789934350607, "f1": 1.769883744418621}, "train_s2->spot6": {"mIoU": 2.1753253415226936, "acc": 39.53492288899881, "f1": 3.094860166311264}, "test_time_sentinel1_sar->s2": {"mIoU": 1.497982908040285, "acc": 18.3973428217361, "f1": 2.382349781692028}, "train_s2->sentinel1_sar": {"mIoU": 2.690516971051693, "acc": 32.56461669653953, "f1": 4.331846535205841}}
+
+##### 2026-11-12 03:42:27 attempt 1: experiments/objective3.py --seeds 1 2 --no_downstream
+
+===== seed 1 =====
+
+--- training generator: seed 1, full
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Epoch 01/12] D Loss: 0.1287 | G Loss: 6.0389 (Adv: 0.88, Cyc: 3.31, Edge: 0.86)
+  [Epoch 02/12] D Loss: 0.0339 | G Loss: 5.0760 (Adv: 0.88, Cyc: 1.64, Edge: 0.69)
+  [Epoch 03/12] D Loss: 0.0215 | G Loss: 4.7112 (Adv: 1.17, Cyc: 1.59, Edge: 0.68)
+  [Epoch 04/12] D Loss: 0.0125 | G Loss: 4.4794 (Adv: 1.06, Cyc: 2.20, Edge: 0.75)
+  [Epoch 05/12] D Loss: 0.0076 | G Loss: 4.2198 (Adv: 1.02, Cyc: 2.11, Edge: 0.70)
+  [Epoch 06/12] D Loss: 0.0044 | G Loss: 3.9842 (Adv: 0.99, Cyc: 2.61, Edge: 0.63)
+  [Epoch 07/12] D Loss: 0.0046 | G Loss: 3.7908 (Adv: 0.93, Cyc: 1.22, Edge: 0.69)
+  [Epoch 08/12] D Loss: 0.0021 | G Loss: 3.6629 (Adv: 0.98, Cyc: 1.00, Edge: 0.61)
+  [Epoch 09/12] D Loss: 0.0029 | G Loss: 3.5450 (Adv: 1.00, Cyc: 1.69, Edge: 0.53)
+  [Epoch 10/12] D Loss: 0.0048 | G Loss: 3.4845 (Adv: 0.97, Cyc: 1.50, Edge: 0.50)
+  [Epoch 11/12] D Loss: 0.0076 | G Loss: 3.4210 (Adv: 0.88, Cyc: 1.17, Edge: 0.51)
+  [Epoch 12/12] D Loss: 0.0074 | G Loss: 3.3811 (Adv: 0.86, Cyc: 1.55, Edge: 0.56)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed1_full\generator.pth
+
+--- done in 3440s
+
+--- training generator: seed 1, hold_sentinel2_spot6
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'spot6'], ['spot6', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1322 | G Loss: 6.1457 (Adv: 1.14, Cyc: 3.46, Edge: 0.80)
+  [Epoch 02/12] D Loss: 0.0400 | G Loss: 5.0609 (Adv: 0.87, Cyc: 2.17, Edge: 0.76)
+  [Epoch 03/12] D Loss: 0.0199 | G Loss: 4.6832 (Adv: 0.95, Cyc: 1.92, Edge: 0.59)
+  [Epoch 04/12] D Loss: 0.0114 | G Loss: 4.4690 (Adv: 0.86, Cyc: 1.52, Edge: 0.71)
+  [Epoch 05/12] D Loss: 0.0040 | G Loss: 4.1513 (Adv: 1.11, Cyc: 1.71, Edge: 0.66)
+  [Epoch 06/12] D Loss: 0.0044 | G Loss: 3.9074 (Adv: 1.10, Cyc: 1.32, Edge: 0.60)
+  [Epoch 07/12] D Loss: 0.0034 | G Loss: 3.7417 (Adv: 1.02, Cyc: 1.23, Edge: 0.59)
+  [Epoch 08/12] D Loss: 0.0030 | G Loss: 3.6057 (Adv: 0.99, Cyc: 1.15, Edge: 0.58)
+  [Epoch 09/12] D Loss: 0.0023 | G Loss: 3.5130 (Adv: 0.99, Cyc: 1.13, Edge: 0.58)
+
+##### 2026-11-12 11:37:40 attempt 1: experiments/objective3.py --seeds 1 --no_downstream
+
+===== seed 1 =====
+--- reusing results/objective3\ckpt\seed1_full
+
+--- training generator: seed 1, hold_sentinel2_spot6
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'spot6'], ['spot6', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1239 | G Loss: 6.1492 (Adv: 0.96, Cyc: 3.40, Edge: 0.84)
+  [Epoch 02/12] D Loss: 0.0377 | G Loss: 5.0485 (Adv: 0.84, Cyc: 2.19, Edge: 0.76)
+  [Epoch 03/12] D Loss: 0.0213 | G Loss: 4.6484 (Adv: 0.89, Cyc: 1.90, Edge: 0.60)
+  [Epoch 04/12] D Loss: 0.0124 | G Loss: 4.4799 (Adv: 1.00, Cyc: 1.46, Edge: 0.72)
+  [Epoch 05/12] D Loss: 0.0041 | G Loss: 4.2389 (Adv: 1.05, Cyc: 1.68, Edge: 0.67)
+  [Epoch 06/12] D Loss: 0.0035 | G Loss: 4.0015 (Adv: 1.05, Cyc: 1.78, Edge: 0.64)
+  [Epoch 07/12] D Loss: 0.0028 | G Loss: 3.8090 (Adv: 1.02, Cyc: 1.22, Edge: 0.60)
+  [Epoch 08/12] D Loss: 0.0016 | G Loss: 3.6608 (Adv: 0.99, Cyc: 1.20, Edge: 0.60)
+  [Epoch 09/12] D Loss: 0.0008 | G Loss: 3.5485 (Adv: 1.00, Cyc: 1.13, Edge: 0.57)
+  [Epoch 10/12] D Loss: 0.0008 | G Loss: 3.4752 (Adv: 1.00, Cyc: 1.48, Edge: 0.64)
+  [Epoch 11/12] D Loss: 0.0008 | G Loss: 3.4258 (Adv: 1.00, Cyc: 1.67, Edge: 0.58)
+  [Epoch 12/12] D Loss: 0.0014 | G Loss: 3.3882 (Adv: 1.01, Cyc: 1.31, Edge: 0.63)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed1_hold_sentinel2_spot6\generator.pth
+
+--- done in 3708s
+
+--- training generator: seed 1, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1390 | G Loss: 6.2057 (Adv: 0.71, Cyc: 3.55, Edge: 0.85)
+  [Epoch 02/12] D Loss: 0.0480 | G Loss: 5.1718 (Adv: 0.87, Cyc: 2.82, Edge: 0.68)
+  [Epoch 03/12] D Loss: 0.0260 | G Loss: 4.7533 (Adv: 1.09, Cyc: 2.12, Edge: 0.73)
+  [Epoch 04/12] D Loss: 0.0158 | G Loss: 4.5002 (Adv: 1.12, Cyc: 1.98, Edge: 0.70)
+  [Epoch 05/12] D Loss: 0.0054 | G Loss: 4.2954 (Adv: 0.95, Cyc: 2.53, Edge: 0.50)
+  [Epoch 06/12] D Loss: 0.0029 | G Loss: 4.0747 (Adv: 0.99, Cyc: 1.60, Edge: 0.66)
+  [Epoch 07/12] D Loss: 0.0008 | G Loss: 3.8861 (Adv: 0.97, Cyc: 1.95, Edge: 0.62)
+  [Epoch 08/12] D Loss: 0.0006 | G Loss: 3.7116 (Adv: 1.02, Cyc: 1.72, Edge: 0.63)
+  [Epoch 09/12] D Loss: 0.0006 | G Loss: 3.6077 (Adv: 1.01, Cyc: 1.52, Edge: 0.59)
+Traceback (most recent call last):
+  File "D:\Final Year Project\experiments\objective3.py", line 122, in <module>
+    main()
+    ~~~~^^
+  File "D:\Final Year Project\experiments\objective3.py", line 74, in main
+    train_generator(cfg, encoder=enc, device=dev)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Final Year Project\train_generator.py", line 158, in train_generator
+    loss_g.backward()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\_tensor.py", line 631, in backward
+    torch.autograd.backward(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self, gradient, retain_graph, create_graph, inputs=inputs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\autograd\__init__.py", line 381, in backward
+    _engine_run_backward(
+    ~~~~~~~~~~~~~~~~~~~~^
+        tensors,
+        ^^^^^^^^
+    ...<5 lines>...
+        accumulate_grad=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\autograd\graph.py", line 869, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        t_outputs, *args, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )  # Calls into the C++ engine to run the backward pass
+    ^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+##### 2026-11-12 13:32:17 attempt 2: experiments/objective3.py --seeds 1 --no_downstream
+
+===== seed 1 =====
+--- reusing results/objective3\ckpt\seed1_full
+--- reusing results/objective3\ckpt\seed1_hold_sentinel2_spot6
+
+--- training generator: seed 1, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1367 | G Loss: 6.0775 (Adv: 1.07, Cyc: 2.92, Edge: 0.82)
+Traceback (most recent call last):
+  File "D:\Final Year Project\experiments\objective3.py", line 122, in <module>
+    main()
+    ~~~~^^
+  File "D:\Final Year Project\experiments\objective3.py", line 74, in main
+    train_generator(cfg, encoder=enc, device=dev)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Final Year Project\train_generator.py", line 158, in train_generator
+    loss_g.backward()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\_tensor.py", line 631, in backward
+    torch.autograd.backward(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self, gradient, retain_graph, create_graph, inputs=inputs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\autograd\__init__.py", line 381, in backward
+    _engine_run_backward(
+    ~~~~~~~~~~~~~~~~~~~~^
+        tensors,
+        ^^^^^^^^
+    ...<5 lines>...
+        accumulate_grad=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Final Year Project\.venv-gpu\Lib\site-packages\torch\autograd\graph.py", line 869, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        t_outputs, *args, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )  # Calls into the C++ engine to run the backward pass
+    ^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+##### 2026-11-12 13:57:22 attempt 3: experiments/objective3.py --seeds 1 --no_downstream
+
+===== seed 1 =====
+--- reusing results/objective3\ckpt\seed1_full
+--- reusing results/objective3\ckpt\seed1_hold_sentinel2_spot6
+
+--- training generator: seed 1, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1358 | G Loss: 6.0366 (Adv: 1.29, Cyc: 3.07, Edge: 0.81)
+  [Epoch 02/12] D Loss: 0.0442 | G Loss: 5.0029 (Adv: 0.79, Cyc: 2.52, Edge: 0.73)
+  [Epoch 03/12] D Loss: 0.0271 | G Loss: 4.7035 (Adv: 1.00, Cyc: 2.01, Edge: 0.71)
+  [Epoch 04/12] D Loss: 0.0165 | G Loss: 4.5012 (Adv: 0.99, Cyc: 2.00, Edge: 0.72)
+  [Epoch 05/12] D Loss: 0.0105 | G Loss: 4.3008 (Adv: 0.98, Cyc: 2.71, Edge: 0.51)
+  [Epoch 06/12] D Loss: 0.0044 | G Loss: 4.0826 (Adv: 0.98, Cyc: 1.56, Edge: 0.65)
+  [Epoch 07/12] D Loss: 0.0032 | G Loss: 3.8720 (Adv: 0.99, Cyc: 2.00, Edge: 0.64)
+  [Epoch 08/12] D Loss: 0.0018 | G Loss: 3.6997 (Adv: 1.01, Cyc: 1.84, Edge: 0.60)
+  [Epoch 09/12] D Loss: 0.0013 | G Loss: 3.5854 (Adv: 1.00, Cyc: 1.55, Edge: 0.60)
+  [Epoch 10/12] D Loss: 0.0011 | G Loss: 3.5104 (Adv: 1.02, Cyc: 1.07, Edge: 0.57)
+  [Epoch 11/12] D Loss: 0.0009 | G Loss: 3.4535 (Adv: 1.02, Cyc: 1.99, Edge: 0.47)
+  [Epoch 12/12] D Loss: 0.0015 | G Loss: 3.4145 (Adv: 1.00, Cyc: 1.29, Edge: 0.62)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed1_hold_sentinel2_sentinel1_sar\generator.pth
+
+--- done in 2848s
+
+--- training generator: seed 1, hold_spot6_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['spot6', 'sentinel1_sar'], ['sentinel1_sar', 'spot6']]
+  [Epoch 01/12] D Loss: 0.1326 | G Loss: 5.9838 (Adv: 0.88, Cyc: 3.07, Edge: 0.80)
+  [Epoch 02/12] D Loss: 0.0388 | G Loss: 4.9892 (Adv: 1.14, Cyc: 1.79, Edge: 0.65)
+  [Epoch 03/12] D Loss: 0.0237 | G Loss: 4.7065 (Adv: 1.17, Cyc: 2.27, Edge: 0.59)
+  [Epoch 04/12] D Loss: 0.0128 | G Loss: 4.4514 (Adv: 1.05, Cyc: 2.19, Edge: 0.60)
+  [Epoch 05/12] D Loss: 0.0063 | G Loss: 4.2479 (Adv: 1.05, Cyc: 2.00, Edge: 0.60)
+  [Epoch 06/12] D Loss: 0.0027 | G Loss: 3.9238 (Adv: 0.95, Cyc: 1.70, Edge: 0.61)
+  [Epoch 07/12] D Loss: 0.0013 | G Loss: 3.7403 (Adv: 1.01, Cyc: 1.13, Edge: 0.77)
+  [Epoch 08/12] D Loss: 0.0009 | G Loss: 3.5932 (Adv: 1.00, Cyc: 1.59, Edge: 0.62)
+  [Epoch 09/12] D Loss: 0.0003 | G Loss: 3.4986 (Adv: 1.00, Cyc: 1.68, Edge: 0.53)
+  [Epoch 10/12] D Loss: 0.0004 | G Loss: 3.4169 (Adv: 1.00, Cyc: 1.30, Edge: 0.56)
+  [Epoch 11/12] D Loss: 0.0003 | G Loss: 3.3663 (Adv: 1.00, Cyc: 1.82, Edge: 0.52)
+  [Epoch 12/12] D Loss: 0.0002 | G Loss: 3.3203 (Adv: 1.00, Cyc: 0.97, Edge: 0.47)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed1_hold_spot6_sentinel1_sar\generator.pth
+
+--- done in 2481s
+
+[*] saved results/objective3\metrics.json
+
+##### 2026-11-14 00:23:14 attempt 1: experiments/objective3.py --seeds 2 --no_downstream
+
+===== seed 2 =====
+
+--- training generator: seed 2, full
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Epoch 01/12] D Loss: 0.1360 | G Loss: 6.1309 (Adv: 1.13, Cyc: 2.60, Edge: 0.66)
+  [Epoch 02/12] D Loss: 0.0405 | G Loss: 5.0993 (Adv: 1.16, Cyc: 2.92, Edge: 0.74)
+  [Epoch 03/12] D Loss: 0.0216 | G Loss: 4.6942 (Adv: 1.16, Cyc: 2.37, Edge: 0.63)
+  [Epoch 04/12] D Loss: 0.0139 | G Loss: 4.4306 (Adv: 1.15, Cyc: 2.63, Edge: 0.74)
+  [Epoch 05/12] D Loss: 0.0056 | G Loss: 4.2149 (Adv: 0.96, Cyc: 1.71, Edge: 0.58)
+  [Epoch 06/12] D Loss: 0.0032 | G Loss: 3.9213 (Adv: 0.95, Cyc: 1.90, Edge: 0.62)
+  [Epoch 07/12] D Loss: 0.0023 | G Loss: 3.7297 (Adv: 1.01, Cyc: 1.42, Edge: 0.63)
+  [Epoch 08/12] D Loss: 0.0013 | G Loss: 3.5936 (Adv: 1.02, Cyc: 2.28, Edge: 0.55)
+  [Epoch 09/12] D Loss: 0.0012 | G Loss: 3.5071 (Adv: 1.01, Cyc: 1.39, Edge: 0.66)
+  [Epoch 10/12] D Loss: 0.0007 | G Loss: 3.4306 (Adv: 1.00, Cyc: 2.24, Edge: 0.55)
+  [Epoch 11/12] D Loss: 0.0005 | G Loss: 3.3776 (Adv: 1.00, Cyc: 1.03, Edge: 0.57)
+  [Epoch 12/12] D Loss: 0.0010 | G Loss: 3.3476 (Adv: 1.00, Cyc: 0.95, Edge: 0.55)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed2_full\generator.pth
+
+--- done in 2800s
+
+--- training generator: seed 2, hold_sentinel2_spot6
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'spot6'], ['spot6', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1277 | G Loss: 5.9582 (Adv: 0.77, Cyc: 2.20, Edge: 0.66)
+  [Epoch 02/12] D Loss: 0.0522 | G Loss: 4.9540 (Adv: 1.06, Cyc: 2.02, Edge: 0.72)
+  [Epoch 03/12] D Loss: 0.0362 | G Loss: 4.6365 (Adv: 0.85, Cyc: 1.99, Edge: 0.70)
+  [Epoch 04/12] D Loss: 0.0267 | G Loss: 4.4829 (Adv: 1.00, Cyc: 2.03, Edge: 0.66)
+  [Epoch 05/12] D Loss: 0.0193 | G Loss: 4.2973 (Adv: 0.94, Cyc: 1.57, Edge: 0.68)
+  [Epoch 06/12] D Loss: 0.0135 | G Loss: 4.1293 (Adv: 0.76, Cyc: 2.75, Edge: 0.64)
+  [Epoch 07/12] D Loss: 0.0108 | G Loss: 3.9067 (Adv: 1.02, Cyc: 1.43, Edge: 0.59)
+  [Epoch 08/12] D Loss: 0.0096 | G Loss: 3.7223 (Adv: 1.01, Cyc: 1.68, Edge: 0.55)
+  [Epoch 09/12] D Loss: 0.0121 | G Loss: 3.6072 (Adv: 1.01, Cyc: 1.99, Edge: 0.59)
+  [Epoch 10/12] D Loss: 0.0184 | G Loss: 3.5188 (Adv: 1.01, Cyc: 1.76, Edge: 0.56)
+  [Epoch 11/12] D Loss: 0.0223 | G Loss: 3.4646 (Adv: 0.87, Cyc: 1.48, Edge: 0.57)
+  [Epoch 12/12] D Loss: 0.0222 | G Loss: 3.4406 (Adv: 0.98, Cyc: 1.19, Edge: 0.50)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed2_hold_sentinel2_spot6\generator.pth
+
+--- done in 2424s
+
+--- training generator: seed 2, hold_sentinel2_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['sentinel2', 'sentinel1_sar'], ['sentinel1_sar', 'sentinel2']]
+  [Epoch 01/12] D Loss: 0.1378 | G Loss: 6.0157 (Adv: 0.83, Cyc: 2.37, Edge: 0.65)
+  [Epoch 02/12] D Loss: 0.0407 | G Loss: 4.9584 (Adv: 1.12, Cyc: 2.17, Edge: 0.70)
+  [Epoch 03/12] D Loss: 0.0207 | G Loss: 4.6077 (Adv: 1.15, Cyc: 2.71, Edge: 0.66)
+  [Epoch 04/12] D Loss: 0.0088 | G Loss: 4.3894 (Adv: 0.95, Cyc: 1.74, Edge: 0.62)
+  [Epoch 05/12] D Loss: 0.0033 | G Loss: 4.1267 (Adv: 0.99, Cyc: 2.09, Edge: 0.60)
+  [Epoch 06/12] D Loss: 0.0018 | G Loss: 3.8943 (Adv: 0.98, Cyc: 1.60, Edge: 0.54)
+  [Epoch 07/12] D Loss: 0.0011 | G Loss: 3.7354 (Adv: 1.05, Cyc: 1.96, Edge: 0.60)
+  [Epoch 08/12] D Loss: 0.0005 | G Loss: 3.6008 (Adv: 1.00, Cyc: 1.14, Edge: 0.72)
+  [Epoch 09/12] D Loss: 0.0007 | G Loss: 3.4909 (Adv: 1.00, Cyc: 1.49, Edge: 0.54)
+  [Epoch 10/12] D Loss: 0.0004 | G Loss: 3.4175 (Adv: 0.99, Cyc: 1.18, Edge: 0.54)
+  [Epoch 11/12] D Loss: 0.0004 | G Loss: 3.3586 (Adv: 1.01, Cyc: 1.60, Edge: 0.61)
+  [Epoch 12/12] D Loss: 0.0003 | G Loss: 3.3228 (Adv: 1.00, Cyc: 1.16, Edge: 0.52)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed2_hold_sentinel2_sentinel1_sar\generator.pth
+
+--- done in 2434s
+
+--- training generator: seed 2, hold_spot6_sentinel1_sar
+
+=======================================================
+ [STAGE 2] Training Unified Multi-Domain Generator     
+=======================================================
+  [Hold-out] Ordered pairs never sampled during training: [['spot6', 'sentinel1_sar'], ['sentinel1_sar', 'spot6']]
+  [Epoch 01/12] D Loss: 0.1350 | G Loss: 5.9678 (Adv: 0.97, Cyc: 2.52, Edge: 0.68)
+  [Epoch 02/12] D Loss: 0.0448 | G Loss: 4.9664 (Adv: 0.92, Cyc: 2.03, Edge: 0.70)
+  [Epoch 03/12] D Loss: 0.0238 | G Loss: 4.6044 (Adv: 1.03, Cyc: 1.62, Edge: 0.71)
+  [Epoch 04/12] D Loss: 0.0144 | G Loss: 4.3666 (Adv: 1.07, Cyc: 1.90, Edge: 0.59)
+  [Epoch 05/12] D Loss: 0.0077 | G Loss: 4.1708 (Adv: 1.04, Cyc: 2.09, Edge: 0.60)
+  [Epoch 06/12] D Loss: 0.0024 | G Loss: 3.9446 (Adv: 0.98, Cyc: 1.15, Edge: 0.60)
+  [Epoch 07/12] D Loss: 0.0016 | G Loss: 3.7296 (Adv: 1.00, Cyc: 1.50, Edge: 0.58)
+  [Epoch 08/12] D Loss: 0.0008 | G Loss: 3.5984 (Adv: 1.01, Cyc: 1.44, Edge: 0.54)
+  [Epoch 09/12] D Loss: 0.0006 | G Loss: 3.5023 (Adv: 1.00, Cyc: 1.96, Edge: 0.67)
+  [Epoch 10/12] D Loss: 0.0008 | G Loss: 3.4161 (Adv: 1.00, Cyc: 1.57, Edge: 0.63)
+  [Epoch 11/12] D Loss: 0.0005 | G Loss: 3.3682 (Adv: 1.00, Cyc: 1.61, Edge: 0.50)
+  [Epoch 12/12] D Loss: 0.0007 | G Loss: 3.3342 (Adv: 0.99, Cyc: 1.01, Edge: 0.59)
+  --> Saved trained Unified Generator to results/objective3\ckpt\seed2_hold_spot6_sentinel1_sar\generator.pth
+
+--- done in 2407s
+
+[*] saved results/objective3\metrics.json

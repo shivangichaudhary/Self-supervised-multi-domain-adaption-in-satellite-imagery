@@ -1,0 +1,28 @@
+
+##### 2026-11-14 03:12:38 attempt 1: experiments/zero_shot_sn6.py --sn6 data/spacenet6_dataset --gens published=outputs_pastis_fixed/generator.pth full_seed0=results/objective3/ckpt/seed0_full/gene
+[*] SpaceNet 6 patches: 2274  device=cuda
+  published  sn6 spot6->sentinel1_sar [canonical style]       n=2274 PSNR 17.67 (copy 8.45, mean 22.56) SSIM 0.474 (copy 0.252, mean 0.666) edge 0.277 (copy 0.262)
+  published  sn6 spot6->sentinel1_sar [exemplar style]        n=2274 PSNR 15.05 (copy 8.45, mean 22.56) SSIM 0.375 (copy 0.252, mean 0.666) edge 0.214 (copy 0.262)
+  published  pastis_heldout spot6->sentinel1_sar [canonical style] n=300 PSNR 16.29 (copy 7.36, mean 20.45) SSIM 0.340 (copy 0.144, mean 0.413) edge 0.183 (copy 0.238)
+  published  sn6 sentinel1_sar->spot6 [canonical style]       n=2274 PSNR 15.41 (copy 8.45, mean 16.56) SSIM 0.274 (copy 0.252, mean 0.353) edge 0.287 (copy 0.262)
+  published  sn6 sentinel1_sar->spot6 [exemplar style]        n=2274 PSNR 11.67 (copy 8.45, mean 16.56) SSIM 0.193 (copy 0.252, mean 0.353) edge 0.168 (copy 0.262)
+  published  pastis_heldout sentinel1_sar->spot6 [canonical style] n=300 PSNR 16.65 (copy 7.36, mean 17.23) SSIM 0.259 (copy 0.144, mean 0.432) edge 0.377 (copy 0.238)
+  full_seed0 sn6 spot6->sentinel1_sar [canonical style]       n=2274 PSNR 11.74 (copy 8.45, mean 22.56) SSIM 0.302 (copy 0.252, mean 0.666) edge 0.185 (copy 0.262)
+  full_seed0 sn6 spot6->sentinel1_sar [exemplar style]        n=2274 PSNR 9.10 (copy 8.45, mean 22.56) SSIM 0.267 (copy 0.252, mean 0.666) edge 0.207 (copy 0.262)
+  full_seed0 pastis_heldout spot6->sentinel1_sar [canonical style] n=300 PSNR 10.90 (copy 7.36, mean 20.45) SSIM 0.181 (copy 0.144, mean 0.413) edge 0.174 (copy 0.238)
+  full_seed0 sn6 sentinel1_sar->spot6 [canonical style]       n=2274 PSNR 15.71 (copy 8.45, mean 16.56) SSIM 0.252 (copy 0.252, mean 0.353) edge 0.243 (copy 0.262)
+  full_seed0 sn6 sentinel1_sar->spot6 [exemplar style]        n=2274 PSNR 8.57 (copy 8.45, mean 16.56) SSIM 0.202 (copy 0.252, mean 0.353) edge 0.187 (copy 0.262)
+  full_seed0 pastis_heldout sentinel1_sar->spot6 [canonical style] n=300 PSNR 15.79 (copy 7.36, mean 17.23) SSIM 0.203 (copy 0.144, mean 0.432) edge 0.271 (copy 0.238)
+  full_seed1 sn6 spot6->sentinel1_sar [canonical style]       n=2274 PSNR 14.53 (copy 8.45, mean 22.56) SSIM 0.367 (copy 0.252, mean 0.666) edge 0.229 (copy 0.262)
+  full_seed1 sn6 spot6->sentinel1_sar [exemplar style]        n=2274 PSNR 10.45 (copy 8.45, mean 22.56) SSIM 0.299 (copy 0.252, mean 0.666) edge 0.216 (copy 0.262)
+  full_seed1 pastis_heldout spot6->sentinel1_sar [canonical style] n=300 PSNR 13.41 (copy 7.36, mean 20.45) SSIM 0.224 (copy 0.144, mean 0.413) edge 0.173 (copy 0.238)
+  full_seed1 sn6 sentinel1_sar->spot6 [canonical style]       n=2274 PSNR 15.89 (copy 8.45, mean 16.56) SSIM 0.274 (copy 0.252, mean 0.353) edge 0.261 (copy 0.262)
+  full_seed1 sn6 sentinel1_sar->spot6 [exemplar style]        n=2274 PSNR 8.77 (copy 8.45, mean 16.56) SSIM 0.208 (copy 0.252, mean 0.353) edge 0.187 (copy 0.262)
+  full_seed1 pastis_heldout sentinel1_sar->spot6 [canonical style] n=300 PSNR 16.10 (copy 7.36, mean 17.23) SSIM 0.245 (copy 0.144, mean 0.432) edge 0.320 (copy 0.238)
+  full_seed2 sn6 spot6->sentinel1_sar [canonical style]       n=2274 PSNR 11.45 (copy 8.45, mean 22.56) SSIM 0.281 (copy 0.252, mean 0.666) edge 0.208 (copy 0.262)
+  full_seed2 sn6 spot6->sentinel1_sar [exemplar style]        n=2274 PSNR 9.61 (copy 8.45, mean 22.56) SSIM 0.262 (copy 0.252, mean 0.666) edge 0.207 (copy 0.262)
+  full_seed2 pastis_heldout spot6->sentinel1_sar [canonical style] n=300 PSNR 10.59 (copy 7.36, mean 20.45) SSIM 0.168 (copy 0.144, mean 0.413) edge 0.184 (copy 0.238)
+  full_seed2 sn6 sentinel1_sar->spot6 [canonical style]       n=2274 PSNR 15.78 (copy 8.45, mean 16.56) SSIM 0.268 (copy 0.252, mean 0.353) edge 0.264 (copy 0.262)
+  full_seed2 sn6 sentinel1_sar->spot6 [exemplar style]        n=2274 PSNR 9.57 (copy 8.45, mean 16.56) SSIM 0.198 (copy 0.252, mean 0.353) edge 0.183 (copy 0.262)
+  full_seed2 pastis_heldout sentinel1_sar->spot6 [canonical style] n=300 PSNR 16.66 (copy 7.36, mean 17.23) SSIM 0.247 (copy 0.144, mean 0.432) edge 0.336 (copy 0.238)
+[*] saved results/objective3/zero_shot_sn6.json
