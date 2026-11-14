@@ -1,50 +1,521 @@
-[*] device=cuda seeds=[0, 1, 2] epochs=20
+
+##### 2026-11-12 15:27:31 attempt 1: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+[*] device=cuda seeds=[0, 1, 2] epochs=40 data=data/france_dataset_season
 {'sentinel2': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'spot6': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'sentinel1_sar': ((1200, 4, 128, 128), (300, 4, 128, 128))}
-[*] prepared translated/matched data in 24s
+[*] prepared translated/matched data in 21s
 
 ===== seed 0 =====
   [train] source_only_s2 (1200 imgs)
-      epoch 01/20  loss 2.9596
-      epoch 05/20  loss 2.5386
-      epoch 10/20  loss 2.4257
-      epoch 15/20  loss 2.3481
-      epoch 20/20  loss 2.2999
-  [train] source_only_s2 done in 518s
-  S2 in-domain: {'mIoU': 8.47010612487793, 'acc': 50.989217401787414, 'f1': 12.412096560001373}
-  spot6: source_only 2.36 | meanstd 2.43 | histmatch 3.26 | gen_test_time 0.36 | gen_raw_ensemble 2.23
-  sentinel1_sar: source_only 0.02 | meanstd 1.02 | histmatch 0.55 | gen_test_time 0.39 | gen_raw_ensemble 0.15
+      epoch 01/40  loss 2.9486
+      epoch 05/40  loss 2.1312
+      epoch 10/40  loss 1.9770
+      epoch 15/40  loss 1.8688
+      epoch 20/40  loss 1.7874
+      epoch 25/40  loss 1.7162
+      epoch 30/40  loss 1.6194
+      epoch 35/40  loss 1.5702
+      epoch 40/40  loss 1.5317
+  [train] source_only_s2 done in 870s
+  S2 in-domain: {'mIoU': 15.51908254623413, 'acc': 61.84443682110141, 'f1': 23.156440258026123}
+  spot6: source_only 2.26 | meanstd 5.76 | histmatch 6.06 | gen_test_time 0.86 | gen_raw_ensemble 1.92
+  sentinel1_sar: source_only 0.19 | meanstd 3.77 | histmatch 3.03 | gen_test_time 0.30 | gen_raw_ensemble 0.20
   [train] train_gen_spot6 (1200 imgs)
-      epoch 01/20  loss 3.0468
-      epoch 05/20  loss 2.6898
-      epoch 10/20  loss 2.6017
-      epoch 15/20  loss 2.5369
-      epoch 20/20  loss 2.4851
-  [train] train_gen_spot6 done in 493s
-  spot6 train_gen: {'mIoU': 3.155774623155594, 'acc': 38.00418220144418, 'f1': 4.904225841164589}
+      epoch 01/40  loss 3.0456
+      epoch 05/40  loss 2.4027
+      epoch 10/40  loss 2.2790
+      epoch 15/40  loss 2.2081
+      epoch 20/40  loss 2.1342
+      epoch 25/40  loss 2.0511
+      epoch 30/40  loss 1.9730
+      epoch 35/40  loss 1.9224
+      epoch 40/40  loss 1.8915
+  [train] train_gen_spot6 done in 854s
+  spot6 train_gen: {'mIoU': 1.8689639866352081, 'acc': 18.719074490698635, 'f1': 2.934320457279682}
   [train] train_stats_spot6 (1200 imgs)
-      epoch 01/20  loss 2.9636
-      epoch 05/20  loss 2.5350
-      epoch 10/20  loss 2.4234
-      epoch 15/20  loss 2.3478
-      epoch 20/20  loss 2.3031
-  [train] train_stats_spot6 done in 466s
-  spot6 train_stats: {'mIoU': 2.2971944883465767, 'acc': 37.73366432825051, 'f1': 3.3313926309347153}
+      epoch 01/40  loss 2.9418
+      epoch 05/40  loss 2.1188
+      epoch 10/40  loss 1.9639
+      epoch 15/40  loss 1.8603
+      epoch 20/40  loss 1.7732
+      epoch 25/40  loss 1.7011
+      epoch 30/40  loss 1.6097
+      epoch 35/40  loss 1.5568
+      epoch 40/40  loss 1.5186
+  [train] train_stats_spot6 done in 852s
+  spot6 train_stats: {'mIoU': 5.863513424992561, 'acc': 33.230440363296616, 'f1': 9.321004897356033}
   [train] train_gen_sentinel1_sar (1200 imgs)
-      epoch 01/20  loss 3.0499
-      epoch 05/20  loss 2.6998
-      epoch 10/20  loss 2.6301
-      epoch 15/20  loss 2.5735
-      epoch 20/20  loss 2.5237
-  [train] train_gen_sentinel1_sar done in 521s
-  sentinel1_sar train_gen: {'mIoU': 2.2705858573317528, 'acc': 40.38716388591933, 'f1': 3.242344781756401}
+      epoch 01/40  loss 3.0515
+      epoch 05/40  loss 2.4728
+      epoch 10/40  loss 2.3828
+      epoch 15/40  loss 2.3194
+      epoch 20/40  loss 2.2534
+      epoch 25/40  loss 2.1783
+      epoch 30/40  loss 2.1005
+      epoch 35/40  loss 2.0577
+      epoch 40/40  loss 2.0315
+  [train] train_gen_sentinel1_sar done in 854s
+  sentinel1_sar train_gen: {'mIoU': 1.292699296027422, 'acc': 13.163253004572233, 'f1': 2.108141779899597}
   [train] train_stats_sentinel1_sar (1200 imgs)
-      epoch 01/20  loss 2.9710
-      epoch 05/20  loss 2.5243
-      epoch 10/20  loss 2.4452
-      epoch 15/20  loss 2.3714
-      epoch 20/20  loss 2.3228
-  [train] train_stats_sentinel1_sar done in 512s
-  sentinel1_sar train_stats: {'mIoU': 1.9774453714489937, 'acc': 23.489758127281462, 'f1': 2.967836707830429}
+      epoch 01/40  loss 2.9450
+      epoch 05/40  loss 2.1593
+      epoch 10/40  loss 2.0201
+      epoch 15/40  loss 1.9139
+      epoch 20/40  loss 1.8384
+      epoch 25/40  loss 1.7581
+      epoch 30/40  loss 1.6723
+      epoch 35/40  loss 1.6195
+      epoch 40/40  loss 1.5849
+  [train] train_stats_sentinel1_sar done in 862s
+  sentinel1_sar train_stats: {'mIoU': 2.367689833045006, 'acc': 38.21382413479489, 'f1': 3.505875915288925}
   [train] train_s2_plus_gen_all (3600 imgs)
-      epoch 01/20  loss 3.0947
-      epoch 05/20  loss 2.7423
+      epoch 01/40  loss 3.1332
+      epoch 05/40  loss 2.5587
+      epoch 10/40  loss 2.4536
+      epoch 15/40  loss 2.3394
+      epoch 20/40  loss 2.2849
+      epoch 25/40  loss 2.2225
+      epoch 30/40  loss 2.1720
+      epoch 35/40  loss 2.1302
+      epoch 40/40  loss 2.1325
+  [train] train_s2_plus_gen_all done in 872s
+  spot6 train_s2_plus_gen_all: {'mIoU': 3.2383710145950317, 'acc': 38.13918628791062, 'f1': 4.784180223941803}
+  sentinel1_sar train_s2_plus_gen_all: {'mIoU': 2.083303779363632, 'acc': 27.884726189019904, 'f1': 3.314058855175972}
+  sentinel2 train_s2_plus_gen_all: {'mIoU': 11.258182674646378, 'acc': 58.621712876535526, 'f1': 16.601958870887756}
+  [train] uda_dann_entropy (1200 imgs)
+      epoch 01/40  loss 3.0474
+      epoch 05/40  loss 2.2198
+      epoch 10/40  loss 2.0344
+      epoch 15/40  loss 1.9193
+      epoch 20/40  loss 1.8395
+      epoch 25/40  loss 1.7358
+      epoch 30/40  loss 1.6685
+      epoch 35/40  loss 1.6031
+      epoch 40/40  loss 1.5740
+  [train] uda_dann_entropy done in 1690s
+  spot6 uda: {'mIoU': 3.434976190328598, 'acc': 38.56135106912954, 'f1': 5.1878951489925385}
+  sentinel1_sar uda: {'mIoU': 1.7205186188220978, 'acc': 16.18431293291281, 'f1': 2.7088098227977753}
+  [train] supervised_spot6 (1200 imgs)
+      epoch 01/40  loss 2.9631
+      epoch 05/40  loss 2.2377
+      epoch 10/40  loss 2.0904
+      epoch 15/40  loss 2.0026
+      epoch 20/40  loss 1.8969
+      epoch 25/40  loss 1.8159
+      epoch 30/40  loss 1.7448
+      epoch 35/40  loss 1.7015
+      epoch 40/40  loss 1.6677
+  [train] supervised_spot6 done in 858s
+  spot6 supervised: {'mIoU': 16.044649481773376, 'acc': 60.868072730238254, 'f1': 22.788971662521362}
+  [train] supervised_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 2.8817
+      epoch 05/40  loss 2.0198
+      epoch 10/40  loss 1.9079
+      epoch 15/40  loss 1.8343
+      epoch 20/40  loss 1.7637
+      epoch 25/40  loss 1.6919
+      epoch 30/40  loss 1.6118
+      epoch 35/40  loss 1.5662
+      epoch 40/40  loss 1.5292
+  [train] supervised_sentinel1_sar done in 858s
+  sentinel1_sar supervised: {'mIoU': 19.92158442735672, 'acc': 60.564025444237025, 'f1': 28.14720869064331}
+
+===== seed 1 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/40  loss 3.2327
+      epoch 05/40  loss 2.1408
+      epoch 10/40  loss 1.9668
+      epoch 15/40  loss 1.8524
+      epoch 20/40  loss 1.8067
+      epoch 25/40  loss 1.7110
+      epoch 30/40  loss 1.6439
+      epoch 35/40  loss 1.5565
+      epoch 40/40  loss 1.5438
+  [train] source_only_s2 done in 999s
+  S2 in-domain: {'mIoU': 16.136808693408966, 'acc': 62.886308475916444, 'f1': 23.88545870780945}
+  spot6: source_only 2.25 | meanstd 4.66 | histmatch 4.28 | gen_test_time 2.22 | gen_raw_ensemble 2.34
+  sentinel1_sar: source_only 2.01 | meanstd 2.84 | histmatch 2.97 | gen_test_time 2.03 | gen_raw_ensemble 2.05
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/40  loss 3.2988
+      epoch 05/40  loss 2.4021
+      epoch 10/40  loss 2.2891
+      epoch 15/40  loss 2.1728
+      epoch 20/40  loss 2.1313
+      epoch 25/40  loss 2.0514
+      epoch 30/40  loss 1.9674
+      epoch 35/40  loss 1.8765
+      epoch 40/40  loss 1.8645
+  [train] train_gen_spot6 done in 1010s
+  spot6 train_gen: {'mIoU': 1.6213275492191315, 'acc': 15.364870039730027, 'f1': 2.596736326813698}
+  [train] train_stats_spot6 (1200 imgs)
+      epoch 01/40  loss 3.2272
+      epoch 05/40  loss 2.1343
+      epoch 10/40  loss 1.9574
+      epoch 15/40  loss 1.8469
+      epoch 20/40  loss 1.8044
+      epoch 25/40  loss 1.7055
+      epoch 30/40  loss 1.6337
+      epoch 35/40  loss 1.5527
+      epoch 40/40  loss 1.5372
+  [train] train_stats_spot6 done in 938s
+  spot6 train_stats: {'mIoU': 5.507798120379448, 'acc': 32.96320230047672, 'f1': 8.680373430252075}
+  [train] train_gen_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.3026
+      epoch 05/40  loss 2.4867
+      epoch 10/40  loss 2.3888
+      epoch 15/40  loss 2.2893
+      epoch 20/40  loss 2.2479
+      epoch 25/40  loss 2.1873
+      epoch 30/40  loss 2.1142
+      epoch 35/40  loss 2.0371
+      epoch 40/40  loss 2.0325
+  [train] train_gen_sentinel1_sar done in 854s
+  sentinel1_sar train_gen: {'mIoU': 1.653824932873249, 'acc': 16.22258477423381, 'f1': 2.6321236044168472}
+  [train] train_stats_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.2177
+      epoch 05/40  loss 2.1686
+      epoch 10/40  loss 1.9949
+      epoch 15/40  loss 1.8918
+      epoch 20/40  loss 1.8497
+      epoch 25/40  loss 1.7605
+      epoch 30/40  loss 1.6892
+      epoch 35/40  loss 1.6072
+      epoch 40/40  loss 1.5892
+  [train] train_stats_sentinel1_sar done in 859s
+  sentinel1_sar train_stats: {'mIoU': 1.9374554976820946, 'acc': 25.982857228967994, 'f1': 3.2168615609407425}
+  [train] train_s2_plus_gen_all (3600 imgs)
+      epoch 01/40  loss 3.3856
+      epoch 05/40  loss 2.5580
+      epoch 10/40  loss 2.4408
+      epoch 15/40  loss 2.3065
+      epoch 20/40  loss 2.2615
+      epoch 25/40  loss 2.2485
+      epoch 30/40  loss 2.1423
+      epoch 35/40  loss 2.1215
+      epoch 40/40  loss 2.1230
+  [train] train_s2_plus_gen_all done in 873s
+  spot6 train_s2_plus_gen_all: {'mIoU': 3.0499160289764404, 'acc': 39.05753319256742, 'f1': 4.518117755651474}
+  sentinel1_sar train_s2_plus_gen_all: {'mIoU': 1.9203528761863708, 'acc': 25.62172351375836, 'f1': 3.0585572123527527}
+  sentinel2 train_s2_plus_gen_all: {'mIoU': 11.759375035762787, 'acc': 60.976816172833594, 'f1': 16.930805146694183}
+  [train] uda_dann_entropy (1200 imgs)
+      epoch 01/40  loss 3.3496
+      epoch 05/40  loss 2.2264
+      epoch 10/40  loss 2.0410
+      epoch 15/40  loss 1.9285
+      epoch 20/40  loss 1.8412
+      epoch 25/40  loss 1.7616
+      epoch 30/40  loss 1.6714
+      epoch 35/40  loss 1.6181
+      epoch 40/40  loss 1.5740
+  [train] uda_dann_entropy done in 2226s
+  spot6 uda: {'mIoU': 1.989736407995224, 'acc': 9.677966943057173, 'f1': 3.5853352397680283}
+  sentinel1_sar uda: {'mIoU': 0.6817417219281197, 'acc': 9.235746564620243, 'f1': 1.2798180803656578}
+  [train] supervised_spot6 (1200 imgs)
+      epoch 01/40  loss 3.2387
+      epoch 05/40  loss 2.2406
+      epoch 10/40  loss 2.0769
+      epoch 15/40  loss 1.9775
+      epoch 20/40  loss 1.9090
+      epoch 25/40  loss 1.8252
+      epoch 30/40  loss 1.7498
+      epoch 35/40  loss 1.6757
+      epoch 40/40  loss 1.6677
+  [train] supervised_spot6 done in 873s
+  spot6 supervised: {'mIoU': 15.969359874725342, 'acc': 60.621289160492644, 'f1': 22.740928828716278}
+  [train] supervised_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.1581
+      epoch 05/40  loss 2.0389
+      epoch 10/40  loss 1.9051
+      epoch 15/40  loss 1.8071
+      epoch 20/40  loss 1.7782
+      epoch 25/40  loss 1.7031
+      epoch 30/40  loss 1.6370
+      epoch 35/40  loss 1.5465
+      epoch 40/40  loss 1.5343
+  [train] supervised_sentinel1_sar done in 900s
+  sentinel1_sar supervised: {'mIoU': 19.904540479183197, 'acc': 60.190791888053866, 'f1': 28.269091248512268}
+
+===== seed 2 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/40  loss 2.9096
+      epoch 05/40  loss 2.0883
+      epoch 10/40  loss 1.9528
+      epoch 15/40  loss 1.8613
+      epoch 20/40  loss 1.7957
+      epoch 25/40  loss 1.7044
+      epoch 30/40  loss 1.6346
+      epoch 35/40  loss 1.5577
+      epoch 40/40  loss 1.5207
+  [train] source_only_s2 done in 880s
+  S2 in-domain: {'mIoU': 16.207255423069, 'acc': 62.5764993608802, 'f1': 23.93118143081665}
+  spot6: source_only 2.25 | meanstd 4.93 | histmatch 4.87 | gen_test_time 0.28 | gen_raw_ensemble 0.97
+  sentinel1_sar: source_only 0.01 | meanstd 2.45 | histmatch 3.32 | gen_test_time 0.03 | gen_raw_ensemble 0.01
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/40  loss 3.0147
+      epoch 05/40  loss 2.3861
+
+##### 2026-11-12 21:30:36 attempt 1: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+[*] device=cuda seeds=[0, 1, 2] epochs=40 data=data/france_dataset_season
+{'sentinel2': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'spot6': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'sentinel1_sar': ((1200, 4, 128, 128), (300, 4, 128, 128))}
+[*] prepared translated/matched data in 24s
+
+===== seed 0: already done, skipping =====
+
+===== seed 1: already done, skipping =====
+
+===== seed 2 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/40  loss 2.9096
+      epoch 05/40  loss 2.0848
+      epoch 10/40  loss 1.9578
+      epoch 15/40  loss 1.8651
+      epoch 20/40  loss 1.7914
+      epoch 25/40  loss 1.7039
+      epoch 30/40  loss 1.6355
+      epoch 35/40  loss 1.5599
+      epoch 40/40  loss 1.5207
+  [train] source_only_s2 done in 995s
+  S2 in-domain: {'mIoU': 16.039642691612244, 'acc': 62.72750360335924, 'f1': 23.67720901966095}
+  spot6: source_only 2.26 | meanstd 4.71 | histmatch 4.75 | gen_test_time 0.26 | gen_raw_ensemble 1.23
+  sentinel1_sar: source_only 0.01 | meanstd 3.05 | histmatch 3.45 | gen_test_time 0.03 | gen_raw_ensemble 0.01
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/40  loss 3.0146
+      epoch 05/40  loss 2.3916
+      epoch 10/40  loss 2.2821
+      epoch 15/40  loss 2.1836
+      epoch 20/40  loss 2.1197
+      epoch 25/40  loss 2.0346
+      epoch 30/40  loss 1.9766
+      epoch 35/40  loss 1.9033
+      epoch 40/40  loss 1.8699
+  [train] train_gen_spot6 done in 1008s
+  spot6 train_gen: {'mIoU': 1.7406264320015907, 'acc': 15.829450746998974, 'f1': 2.7505310252308846}
+  [train] train_stats_spot6 (1200 imgs)
+      epoch 01/40  loss 2.9021
+      epoch 05/40  loss 2.0800
+      epoch 10/40  loss 1.9515
+      epoch 15/40  loss 1.8565
+      epoch 20/40  loss 1.7973
+      epoch 25/40  loss 1.6999
+      epoch 30/40  loss 1.6378
+      epoch 35/40  loss 1.5559
+      epoch 40/40  loss 1.5205
+  [train] train_stats_spot6 done in 876s
+  spot6 train_stats: {'mIoU': 5.25251030921936, 'acc': 30.033755453792793, 'f1': 8.302094787359238}
+  [train] train_gen_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.0143
+      epoch 05/40  loss 2.4795
+      epoch 10/40  loss 2.3855
+      epoch 15/40  loss 2.2964
+      epoch 20/40  loss 2.2376
+      epoch 25/40  loss 2.1513
+      epoch 30/40  loss 2.1129
+      epoch 35/40  loss 2.0438
+      epoch 40/40  loss 2.0133
+  [train] train_gen_sentinel1_sar done in 895s
+  sentinel1_sar train_gen: {'mIoU': 1.3552818447351456, 'acc': 13.672643013028827, 'f1': 2.181200496852398}
+  [train] train_stats_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 2.9078
+      epoch 05/40  loss 2.1436
+      epoch 10/40  loss 2.0088
+      epoch 15/40  loss 1.9109
+      epoch 20/40  loss 1.8465
+      epoch 25/40  loss 1.7539
+      epoch 30/40  loss 1.6899
+      epoch 35/40  loss 1.6202
+      epoch 40/40  loss 1.5819
+  [train] train_stats_sentinel1_sar done in 896s
+  sentinel1_sar train_stats: {'mIoU': 2.477031946182251, 'acc': 31.5695488221935, 'f1': 3.9592809975147247}
+  [train] train_s2_plus_gen_all (3600 imgs)
+      epoch 01/40  loss 3.1114
+      epoch 05/40  loss 2.5485
+      epoch 10/40  loss 2.4264
+      epoch 15/40  loss 2.3572
+      epoch 20/40  loss 2.3027
+      epoch 25/40  loss 2.2560
+forrtl: error (200): program aborting due to window-CLOSE event
+Image              PC                Routine            Line        Source             
+KERNELBASE.dll     00007FF8241A79FD  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FF8264EDDA7  Unknown               Unknown  Unknown
+ntdll.dll          00007FF826AF9C5C  Unknown               Unknown  Unknown
+
+##### 2026-11-13 01:09:48 attempt 1: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+[*] device=cuda seeds=[0, 1, 2] epochs=40 data=data/france_dataset_season
+{'sentinel2': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'spot6': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'sentinel1_sar': ((1200, 4, 128, 128), (300, 4, 128, 128))}
+[*] prepared translated/matched data in 26s
+
+===== seed 0: already done, skipping =====
+
+===== seed 1: already done, skipping =====
+
+===== seed 2 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/40  loss 2.9095
+      epoch 05/40  loss 2.0892
+      epoch 10/40  loss 1.9604
+      epoch 15/40  loss 1.8629
+      epoch 20/40  loss 1.7899
+      epoch 25/40  loss 1.7035
+      epoch 30/40  loss 1.6359
+      epoch 35/40  loss 1.5583
+      epoch 40/40  loss 1.5229
+  [train] source_only_s2 done in 870s
+  S2 in-domain: {'mIoU': 16.44849330186844, 'acc': 62.26296721785209, 'f1': 24.396932125091553}
+  spot6: source_only 2.25 | meanstd 4.88 | histmatch 4.93 | gen_test_time 0.17 | gen_raw_ensemble 0.81
+  sentinel1_sar: source_only 0.01 | meanstd 3.32 | histmatch 3.55 | gen_test_time 0.03 | gen_raw_ensemble 0.01
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/40  loss 3.0145
+      epoch 05/40  loss 2.3804
+      epoch 10/40  loss 2.2753
+      epoch 15/40  loss 2.1907
+      epoch 20/40  loss 2.1235
+      epoch 25/40  loss 2.0401
+      epoch 30/40  loss 1.9884
+      epoch 35/40  loss 1.9170
+      epoch 40/40  loss 1.8852
+  [train] train_gen_spot6 done in 871s
+  spot6 train_gen: {'mIoU': 1.758282259106636, 'acc': 15.967357908863821, 'f1': 2.805367112159729}
+  [train] train_stats_spot6 (1200 imgs)
+      epoch 01/40  loss 2.9021
+      epoch 05/40  loss 2.0819
+      epoch 10/40  loss 1.9575
+      epoch 15/40  loss 1.8582
+      epoch 20/40  loss 1.7969
+      epoch 25/40  loss 1.7025
+      epoch 30/40  loss 1.6381
+      epoch 35/40  loss 1.5595
+      epoch 40/40  loss 1.5230
+  [train] train_stats_spot6 done in 873s
+  spot6 train_stats: {'mIoU': 5.650123953819275, 'acc': 31.3742228179067, 'f1': 8.86501669883728}
+  [train] train_gen_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.0145
+      epoch 05/40  loss 2.4775
+
+##### 2026-11-13 02:00:08 attempt 2: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+
+##### 2026-11-13 02:00:33 attempt 3: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+
+##### 2026-11-14 03:25:46 attempt 1: experiments/objective4.py --seeds 0 1 2 --epochs 40 --data_dir data/france_dataset_season
+[*] device=cuda seeds=[0, 1, 2] epochs=40 data=data/france_dataset_season
+{'sentinel2': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'spot6': ((1200, 4, 128, 128), (300, 4, 128, 128)), 'sentinel1_sar': ((1200, 4, 128, 128), (300, 4, 128, 128))}
+[*] prepared translated/matched data in 26s
+
+===== seed 0: already done, skipping =====
+
+===== seed 1: already done, skipping =====
+
+===== seed 2 =====
+  [train] source_only_s2 (1200 imgs)
+      epoch 01/40  loss 2.9096
+      epoch 05/40  loss 2.0858
+      epoch 10/40  loss 1.9588
+      epoch 15/40  loss 1.8606
+      epoch 20/40  loss 1.7925
+      epoch 25/40  loss 1.7053
+      epoch 30/40  loss 1.6361
+      epoch 35/40  loss 1.5601
+      epoch 40/40  loss 1.5210
+  [train] source_only_s2 done in 892s
+  S2 in-domain: {'mIoU': 15.607662498950958, 'acc': 62.12865011869367, 'f1': 22.97823280096054}
+  spot6: source_only 2.25 | meanstd 4.81 | histmatch 4.94 | gen_test_time 0.12 | gen_raw_ensemble 0.45
+  sentinel1_sar: source_only 0.01 | meanstd 3.35 | histmatch 3.45 | gen_test_time 0.02 | gen_raw_ensemble 0.01
+  [train] train_gen_spot6 (1200 imgs)
+      epoch 01/40  loss 3.0146
+      epoch 05/40  loss 2.3924
+      epoch 10/40  loss 2.2890
+      epoch 15/40  loss 2.1872
+      epoch 20/40  loss 2.1237
+      epoch 25/40  loss 2.0403
+      epoch 30/40  loss 1.9855
+      epoch 35/40  loss 1.9165
+      epoch 40/40  loss 1.8835
+  [train] train_gen_spot6 done in 841s
+  spot6 train_gen: {'mIoU': 1.8529675900936127, 'acc': 17.190084512735414, 'f1': 2.8975781053304672}
+  [train] train_stats_spot6 (1200 imgs)
+      epoch 01/40  loss 2.9021
+      epoch 05/40  loss 2.0805
+      epoch 10/40  loss 1.9523
+      epoch 15/40  loss 1.8534
+      epoch 20/40  loss 1.7905
+      epoch 25/40  loss 1.6982
+      epoch 30/40  loss 1.6350
+      epoch 35/40  loss 1.5546
+      epoch 40/40  loss 1.5176
+  [train] train_stats_spot6 done in 840s
+  spot6 train_stats: {'mIoU': 5.692506954073906, 'acc': 32.4850148123328, 'f1': 8.89672115445137}
+  [train] train_gen_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 3.0144
+      epoch 05/40  loss 2.4771
+      epoch 10/40  loss 2.3838
+      epoch 15/40  loss 2.2981
+      epoch 20/40  loss 2.2394
+      epoch 25/40  loss 2.1513
+      epoch 30/40  loss 2.1145
+      epoch 35/40  loss 2.0438
+      epoch 40/40  loss 2.0152
+  [train] train_gen_sentinel1_sar done in 910s
+  sentinel1_sar train_gen: {'mIoU': 1.3937304727733135, 'acc': 13.009766743431959, 'f1': 2.2882824763655663}
+  [train] train_stats_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 2.9078
+      epoch 05/40  loss 2.1410
+      epoch 10/40  loss 2.0067
+      epoch 15/40  loss 1.9141
+      epoch 20/40  loss 1.8465
+      epoch 25/40  loss 1.7554
+      epoch 30/40  loss 1.6925
+      epoch 35/40  loss 1.6252
+      epoch 40/40  loss 1.5858
+  [train] train_stats_sentinel1_sar done in 842s
+  sentinel1_sar train_stats: {'mIoU': 2.4696271866559982, 'acc': 33.67026736659593, 'f1': 3.8563717156648636}
+  [train] train_s2_plus_gen_all (3600 imgs)
+      epoch 01/40  loss 3.1115
+      epoch 05/40  loss 2.5391
+      epoch 10/40  loss 2.4221
+      epoch 15/40  loss 2.3636
+      epoch 20/40  loss 2.3003
+      epoch 25/40  loss 2.2552
+      epoch 30/40  loss 2.1611
+      epoch 35/40  loss 2.1239
+      epoch 40/40  loss 2.1082
+  [train] train_s2_plus_gen_all done in 855s
+  spot6 train_s2_plus_gen_all: {'mIoU': 3.171836957335472, 'acc': 38.43951054592, 'f1': 4.613623395562172}
+  sentinel1_sar train_s2_plus_gen_all: {'mIoU': 1.4687457121908665, 'acc': 16.768097018563726, 'f1': 2.4037273600697517}
+  sentinel2 train_s2_plus_gen_all: {'mIoU': 11.587715148925781, 'acc': 59.63557317788805, 'f1': 16.87086522579193}
+  [train] uda_dann_entropy (1200 imgs)
+      epoch 01/40  loss 3.0111
+      epoch 05/40  loss 2.2008
+      epoch 10/40  loss 2.0456
+      epoch 15/40  loss 1.9384
+      epoch 20/40  loss 1.8404
+      epoch 25/40  loss 1.7523
+      epoch 30/40  loss 1.6691
+      epoch 35/40  loss 1.6110
+      epoch 40/40  loss 1.5746
+  [train] uda_dann_entropy done in 1575s
+  spot6 uda: {'mIoU': 1.9193101674318314, 'acc': 13.905531710447702, 'f1': 3.2350316643714905}
+  sentinel1_sar uda: {'mIoU': 2.3777974769473076, 'acc': 30.407675997283963, 'f1': 3.4431390464305878}
+  [train] supervised_spot6 (1200 imgs)
+      epoch 01/40  loss 2.9391
+      epoch 05/40  loss 2.2217
+      epoch 10/40  loss 2.0915
+      epoch 15/40  loss 1.9797
+      epoch 20/40  loss 1.9030
+      epoch 25/40  loss 1.8089
+      epoch 30/40  loss 1.7624
+      epoch 35/40  loss 1.6956
+      epoch 40/40  loss 1.6666
+  [train] supervised_spot6 done in 837s
+  spot6 supervised: {'mIoU': 15.592727065086365, 'acc': 60.912593939974144, 'f1': 22.181114554405212}
+  [train] supervised_sentinel1_sar (1200 imgs)
+      epoch 01/40  loss 2.8590
+      epoch 05/40  loss 2.0330
+      epoch 10/40  loss 1.8979
+      epoch 15/40  loss 1.8165
+      epoch 20/40  loss 1.7516
+      epoch 25/40  loss 1.6788
+      epoch 30/40  loss 1.6247
+      epoch 35/40  loss 1.5706
+      epoch 40/40  loss 1.5368
+  [train] supervised_sentinel1_sar done in 836s
+  sentinel1_sar supervised: {'mIoU': 19.7752445936203, 'acc': 60.591504936557826, 'f1': 28.147923946380615}
+
+[*] saved results/objective4\metrics.json

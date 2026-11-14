@@ -27,21 +27,27 @@ def obj4(path):
     ci = d.get("bootstrap_gain_vs_source_only_ci95_seed0", {})
     M = d.get("metrics", d)
     seeds = sorted(M)
+    bpath = os.path.join(os.path.dirname(path), "baselines.json")
+    B = json.load(open(bpath)) if os.path.exists(bpath) else {}
     lines = [f"Objective 4 — held-out 300 patches/sensor, seeds {seeds} (mean ± std over seeds)\n"]
     for t in ["spot6", "sentinel1_sar"]:
         lines.append(f"\n**Target sensor: {SHORT[t]}** (all adaptation uses only unlabeled {SHORT[t]} patches, except the supervised bound)\n")
-        lines.append("| Variant | mIoU | Acc | Macro-F1 | mIoU gain vs source-only (seed-0 95% CI) |")
-        lines.append("|---|---|---|---|---|")
+        lines.append(f"| Variant | mIoU | Acc | Macro-F1 | mIoU gain vs source-only, mean over seeds | gain in seed {seeds[0]} [95% CI over patches] |")
+        lines.append("|---|---|---|---|---|---|")
+        if t in B.get("majority_predictor", {}):
+            r = B["majority_predictor"][t]
+            lines.append(f"| Reference: predict the most frequent training class everywhere | {r['mIoU']:.2f} | {r['acc']:.2f} | {r['f1']:.2f} | | |")
         base = np.mean([M[s][t]["source_only"]["mIoU"] for s in seeds])
         for k, label in V4:
             vals = [M[s][t][k] for s in seeds if k in M[s][t]]
             if not vals:
                 continue
             gain = np.mean([v["mIoU"] for v in vals]) - base
+            g0 = M[seeds[0]][t][k]["mIoU"] - M[seeds[0]][t]["source_only"]["mIoU"]
             c = ci.get(t, {}).get(k)
-            cis = f" [{c[0]:+.2f}, {c[1]:+.2f}]" if c else ""
+            cis = f"{g0:+.2f} [{c[0]:+.2f}, {c[1]:+.2f}]" if c else f"{g0:+.2f}"
             lines.append(f"| {label} | {ms([v['mIoU'] for v in vals])} | {ms([v['acc'] for v in vals])} | "
-                         f"{ms([v['f1'] for v in vals])} | {gain:+.2f}{cis} |")
+                         f"{ms([v['f1'] for v in vals])} | {gain:+.2f} | {cis} |")
     lines.append("\n**Source sensor S2 (in-domain)**\n")
     lines.append("| Model | mIoU | Acc | Macro-F1 |")
     lines.append("|---|---|---|---|")
@@ -49,6 +55,18 @@ def obj4(path):
         vals = [M[s]["sentinel2"][k] for s in seeds if k in M[s]["sentinel2"]]
         if vals:
             lines.append(f"| {dict(V4)[k]} | {ms([v['mIoU'] for v in vals])} | {ms([v['acc'] for v in vals])} | {ms([v['f1'] for v in vals])} |")
+    if B.get("collapse_seed0"):
+        lines.append(f"\n**How many classes each model predicts on the target (seed {seeds[0]}, 19 land-cover classes + void)** — "
+                     f"a model that predicts one class everywhere scores like the most-frequent-class reference\n")
+        lines.append("| Variant | SPOT: classes predicted / top-class share | SAR: classes predicted / top-class share |")
+        lines.append("|---|---|---|")
+        for k, label in V4:
+            cells = []
+            for t in ["spot6", "sentinel1_sar"]:
+                c = B["collapse_seed0"].get(t, {}).get(k)
+                cells.append(f"{c['classes_predicted']} / {c['top_class_share_pct']:.1f}%" if c else "")
+            if any(cells):
+                lines.append(f"| {label} | {cells[0]} | {cells[1]} |")
     return "\n".join(lines)
 
 

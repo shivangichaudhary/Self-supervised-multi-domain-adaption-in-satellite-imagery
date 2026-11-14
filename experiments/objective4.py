@@ -39,13 +39,14 @@ def main():
     ap.add_argument("--ckpt_dir", default="outputs_pastis_fixed")
     ap.add_argument("--out", default="results/objective4")
     ap.add_argument("--skip_uda", action="store_true")
+    ap.add_argument("--data_dir", default=None, help="converted dataset folder (default: the PASTIS folder of the config)")
     args = ap.parse_args()
 
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     os.makedirs(args.out, exist_ok=True)
     cfg = apply_dataset(load_config(None), "pastis")
-    root = cfg["data"]["data_dir"]
-    print(f"[*] device={dev} seeds={args.seeds} epochs={args.epochs}", flush=True)
+    root = args.data_dir or cfg["data"]["data_dir"]
+    print(f"[*] device={dev} seeds={args.seeds} epochs={args.epochs} data={root}", flush=True)
 
     tr = {d: load_domain(root, d, "train") for d in SENSORS}
     va = {d: load_domain(root, d, "val") for d in SENSORS}
@@ -78,9 +79,19 @@ def main():
         torch.cat([Mtr[S2]] * (1 + len(TARGETS))))
     print(f"[*] prepared translated/matched data in {time.time() - t0:.0f}s", flush=True)
 
+    # Resume support: finished seeds are kept in metrics.json, and the first seed's predictions
+    # (needed for the bootstrap CIs) are kept in seed0_preds.pt, so a killed run can be restarted.
+    mpath = os.path.join(args.out, "metrics.json")
+    ppath = os.path.join(args.out, "seed0_preds.pt")
     results = {}
-    keep_preds = {}   # seed-0 predictions for bootstrap CIs
+    if os.path.exists(mpath):
+        prev = json.load(open(mpath))
+        results = prev["metrics"] if "metrics" in prev else prev
+    keep_preds = torch.load(ppath) if os.path.exists(ppath) else {}   # seed-0 predictions for bootstrap CIs
     for seed in args.seeds:
+        if str(seed) in results:
+            print(f"\n===== seed {seed}: already done, skipping =====", flush=True)
+            continue
         R = results[str(seed)] = {t: {} for t in TARGETS + [S2]}
         P = {}
         print(f"\n===== seed {seed} =====", flush=True)
@@ -154,7 +165,8 @@ def main():
 
         if seed == args.seeds[0]:
             keep_preds = P
-        json.dump(results, open(os.path.join(args.out, "metrics.json"), "w"), indent=1)
+            torch.save(P, ppath)
+        json.dump(results, open(mpath, "w"), indent=1)
 
     # bootstrap CIs of mIoU gain over source-only (first seed, resampling the 300 patches)
     ci = {}

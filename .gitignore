@@ -34,6 +34,7 @@ Thumbs.db
 # SpaceNet 6 raw downloads/converted patches and Objective 3/4 run artifacts (large, regenerable)
 data/spacenet6/
 data/spacenet6_dataset*/
+data/france_dataset_season/
 results/**/ckpt/
 results/objective4/seed0_preds.pt
 results/queue_*.txt
